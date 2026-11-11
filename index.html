@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>로직트리 인터뷰 페르소나</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4f8;--surface:#fff;--surface2:#f6f7fb;--border:#dde1ea;--border2:#c3cbdc;--navy:#1b2a4a;--navy2:#28406e;--gold:#b98a3d;--goldbg:#fbf5ea;--gold-ink:#f3c97a;--text:#0f172a;--t2:#374151;--t3:#6b7280;--warnbg:#fff7ed;--warnline:#fdba74;--warn:#c2410c;--okbg:#dcfce7;--okc:#166534;--code:#0f1a30;--code-ink:#e8ecf5;--sys:#e5e7eb;--ai:#1b2a4a;--hu:#b98a3d;--neg:#dc2626;--pos:#16a34a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151f;--surface:#171e2b;--surface2:#1d2534;--border:#2a3446;--border2:#3a4760;--navy:#22345a;--navy2:#9fb3dc;--gold:#d2a65a;--goldbg:#2a2418;--text:#e6eaf2;--t2:#c7cfdd;--t3:#94a0b5;--warnbg:#2a1d12;--warnline:#7c4a1e;--warn:#fb923c;--okbg:#14321f;--okc:#86efac;--code:#0a0f1a;--sys:#2a3446;--neg:#f87171;--pos:#4ade80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10151f;--surface:#171e2b;--surface2:#1d2534;--border:#2a3446;--border2:#3a4760;--navy:#22345a;--navy2:#9fb3dc;--gold:#d2a65a;--goldbg:#2a2418;--text:#e6eaf2;--t2:#c7cfdd;--t3:#94a0b5;--warnbg:#2a1d12;--warnline:#7c4a1e;--warn:#fb923c;--okbg:#14321f;--okc:#86efac;--code:#0a0f1a;--sys:#2a3446;--neg:#f87171;--pos:#4ade80;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Noto Sans KR',system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding-block:16px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero{background:var(--navy);color:#fff;border-radius:14px;padding:16px 20px;margin-bottom:12px}
+.hero h1{margin:0 0 4px;font-size:1.15rem;font-weight:900;text-wrap:balance}.hero p{margin:0;color:#d6dcea;font-size:.86rem}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;color:var(--warn);border:1px solid var(--warnline);background:var(--warnbg);border-radius:12px;padding:1px 9px;margin-bottom:6px}
+.prog{height:6px;background:rgba(255,255,255,.18);border-radius:3px;margin-top:10px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+.progt{font-size:.74rem;color:#d6dcea;margin-top:4px}
+.tabs{display:flex;gap:4px;overflow-x:auto;margin:0 0 12px;border-bottom:2px solid var(--border)}
+.tabs button{flex:none;border:0;background:none;color:var(--t3);font:inherit;font-size:.86rem;font-weight:700;padding:9px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--navy2);border-bottom-color:var(--gold)}
+.tabs button b{display:inline-block;min-width:18px;height:18px;border-radius:9px;background:var(--surface2);color:var(--t3);font-size:.7rem;line-height:18px;text-align:center;margin-right:4px;padding:0 4px}
+.tabs button.on b{background:var(--gold);color:#fff}
+.tabs button:focus-visible,.btn:focus-visible,.tcard:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.pane{display:none}.pane.on{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;min-width:0}
+.card h2{margin:0 0 6px;font-size:1.02rem;color:var(--navy2);font-weight:900}
+.card h3{margin:14px 0 4px;font-size:.9rem;color:var(--navy2)}
+.key{border:2px solid var(--navy);border-radius:10px;padding:9px 12px;margin:0 0 12px;font-size:.86rem;color:var(--t2)}
+.key b.k{display:block;color:var(--navy2);font-size:.95rem}
+.key.g{border-color:var(--gold);background:var(--goldbg)}
+.why{font-size:.8rem;color:var(--t2);background:var(--surface2);border-radius:8px;padding:7px 10px;margin:6px 0 10px}
+.why b{color:var(--gold)}
+.sub{margin:0 0 8px;font-size:.85rem;color:var(--t2)}.note{font-size:.78rem;color:var(--t3)}
+.warnbox{background:var(--warnbg);border:1px solid var(--warnline);border-radius:10px;padding:9px 12px;font-size:.82rem;color:var(--t2);margin:8px 0}
+.okbox{background:var(--okbg);border-radius:10px;padding:9px 12px;font-size:.84rem;color:var(--text);margin:8px 0}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:7px 14px;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
+.btn.gold{background:var(--gold)}.btn.ghost{background:var(--surface);color:var(--navy2);border:1.5px solid var(--border2)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+select,input[type=text],textarea{font:inherit;font-size:.86rem;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);padding:6px 8px;max-width:100%}
+textarea{width:100%;resize:vertical;line-height:1.5}
+input[type=text]{width:100%}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{border:1px solid var(--border);padding:6px;text-align:left;vertical-align:top}
+th{background:var(--surface2);color:var(--navy2);font-weight:700}
+td textarea,td select,td input{border-width:1px;padding:4px 6px;font-size:.8rem;width:100%}
+tr.exrow td{color:var(--t3);font-size:.78rem;background:var(--surface2);font-style:italic}
+.tscroll{overflow-x:auto}.tscroll table{min-width:640px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.tcard{text-align:left;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);border-radius:10px;padding:10px 12px;font:inherit;cursor:pointer}
+.tcard b{color:var(--navy2);display:block}.tcard span{font-size:.76rem;color:var(--t3)}
+.tcard.on{border-color:var(--gold);background:var(--goldbg);box-shadow:inset 0 0 0 2px var(--gold)}
+.mytask{background:var(--navy);color:#fff;border-radius:10px;padding:10px 12px;font-size:.85rem;margin-top:8px}.mytask b{color:var(--gold-ink)}
+.fl{display:flex;flex-direction:column}
+.fs2{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;border:1px solid var(--border);border-radius:12px;padding:9px 12px;background:var(--surface)}
+.fs2.gold{border-color:var(--gold);background:var(--goldbg)}
+.fn{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.8rem}
+.fs2.gold .fn{background:var(--gold)}
+.fb{min-width:0}.fb b{display:block;color:var(--navy2);font-size:.9rem}.fb span{display:block;font-size:.83rem;color:var(--t2)}
+.fb em{display:block;font-style:normal;font-size:.79rem;color:var(--gold);font-weight:700}
+.fa{text-align:center;color:var(--gold);font-weight:900;line-height:1.3}
+.fld{margin:0 0 10px;min-width:0}
+.fld label{display:block;font-size:.84rem;font-weight:700;color:var(--navy2);margin-bottom:2px}
+.fld .hint{font-size:.76rem;color:var(--t3);margin-bottom:3px}
+.ex{font-size:.76rem;color:var(--t3);font-style:italic;margin-bottom:3px}
+.ex:empty{display:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+.prompt{background:var(--code);color:var(--code-ink);border-radius:10px;padding:12px;font-size:.78rem;white-space:pre-wrap;word-break:break-word;margin:8px 0;max-height:300px;overflow:auto}
+.tot{font-weight:900;text-align:center}
+.st-ok{color:var(--pos);font-weight:900}.st-ng{color:var(--warn);font-weight:900}
+.hyp{border:2px solid var(--gold);border-radius:10px;padding:10px 12px;background:var(--goldbg);font-size:.92rem;font-weight:700;color:var(--text);margin:8px 0}
+.hyp small{display:block;font-weight:400;color:var(--t3);font-size:.74rem}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.qi{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--border);border-radius:10px;padding:9px 11px;font-size:.84rem;background:var(--surface)}
+label.qi{cursor:pointer}.qi.ok{border-color:#86efac;background:var(--okbg)}.qi.ng{border-color:var(--warnline);background:var(--warnbg)}
+.qi .qs{flex:none;width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:900;color:#fff}
+.qi.ok .qs{background:#16a34a}.qi.ng .qs{background:#ea580c}
+.prev{border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:12px 14px;margin:10px 0;background:var(--goldbg);font-size:.84rem;color:var(--t2)}
+.prev b.h{display:block;color:var(--navy2);margin-bottom:4px}
+.badge{display:inline-block;font-size:.68rem;font-weight:800;border-radius:5px;padding:0 6px;vertical-align:1px}
+.b-I,.b-T,.b-R{background:var(--okbg);color:var(--okc)}.b-A{background:var(--warnbg);color:var(--warn)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;font-size:.76rem;color:var(--t3);margin:6px 0}
+.lane{display:inline-block;font-size:.72rem;font-weight:700;border-radius:6px;padding:1px 7px;margin-right:4px}
+.lane.sys{background:var(--sys);color:var(--t2)}.lane.ai{background:var(--navy);color:#fff}.lane.hu{border:1.5px solid var(--hu);color:var(--gold)}
+#printReport{display:none}
+@media print{body>*:not(#printReport){display:none!important}#printReport{display:block}}
+
+
+.primer{width:100%;border-collapse:collapse;font-size:.82rem}.primer th,.primer td{border-bottom:1px solid var(--border);padding:7px 8px;text-align:left;vertical-align:top}.primer th{background:var(--surface2);font-size:.76rem;color:var(--t3)}.primer tr.low td{background:var(--warnbg)}.primerq{margin-top:8px;font-size:.84rem;border:1px solid var(--border);border-radius:8px;padding:8px 10px}.primerq summary{cursor:pointer;font-weight:700}.primerq p{margin:6px 0 0}
+.stg{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;padding:10px 0;border-top:1px solid var(--border)}.stg .sh b{display:block;color:var(--navy);font-size:.9rem}.stg .sh span{font-size:.76rem;color:var(--t3)}.stg .exs{font-size:.78rem;color:var(--t3);margin-bottom:4px;line-height:1.6}.stg .exs b{color:var(--t2);font-weight:600}@media(max-width:700px){.stg{grid-template-columns:1fr}}
+.pf label .lk{font-weight:600;font-size:.72rem;color:var(--gold);margin-left:4px}.pf .exs{font-size:.76rem;color:var(--t3);margin-bottom:3px}.pf .exs b{color:var(--t2);font-weight:600}
+.pcard{border:2px solid var(--navy);border-radius:12px;padding:12px 14px;margin-top:10px;background:var(--surface)}.pcard h4{margin:0 0 6px;font-size:.95rem;color:var(--navy2)}.pcard .pc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 14px;font-size:.8rem}.pcard .pc div b{display:block;font-size:.7rem;color:var(--t3)}
+.aisteps{display:grid;gap:6px;margin:8px 0}.aisteps div{display:flex;gap:8px;align-items:flex-start;font-size:.82rem;color:var(--t2)}.aisteps>div>b{flex:0 0 22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.jnav{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.jnav button{font:inherit;font-size:.8rem;border:1px solid var(--border2);background:var(--surface);color:var(--t2);border-radius:8px;padding:6px 10px;cursor:pointer;display:flex;gap:6px;align-items:center}.jnav button.on{background:var(--navy);color:#fff;border-color:var(--navy)}.jnav .dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.jst{display:none;border:2px solid var(--navy);border-radius:12px;padding:14px;background:var(--surface)}.jst.on{display:block}.jst h4{margin:0 0 2px;font-size:1rem;color:var(--navy2)}.jst .who{font-size:.78rem;color:var(--t3);margin-bottom:10px}
+.jf{display:grid;grid-template-columns:170px 1fr;gap:4px 12px;padding:9px 0;border-top:1px solid var(--border)}.jf .q b{display:block;font-size:.86rem;color:var(--text)}.jf .q span{font-size:.74rem;color:var(--t3)}.jf .exs{font-size:.76rem;color:var(--t3);margin-bottom:4px;line-height:1.55}.jf .exs b{color:var(--t2);font-weight:600}@media(max-width:700px){.jf{grid-template-columns:1fr}}
+.mood{display:flex;gap:5px;flex-wrap:wrap}.mood button,.evd button{font:inherit;font-size:.78rem;border:1px solid var(--border2);background:var(--surface);color:var(--t2);border-radius:8px;padding:6px 9px;cursor:pointer;text-align:center;line-height:1.3}.mood button b{display:block;font-size:.95rem}.mood button.on.m-2{background:#b91c1c;color:#fff;border-color:#b91c1c}.mood button.on.m-1{background:#ea7a2a;color:#fff;border-color:#ea7a2a}.mood button.on.m0{background:#8a94a6;color:#fff;border-color:#8a94a6}.mood button.on.m1{background:#4f8fd6;color:#fff;border-color:#4f8fd6}.mood button.on.m2{background:#2f7a55;color:#fff;border-color:#2f7a55}
+.evd{display:flex;gap:5px;flex-wrap:wrap}.evd button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.jnext{display:flex;justify-content:space-between;margin-top:10px}
+.jover{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:6px;min-width:760px}.jover .c{border:1px solid var(--border);border-radius:8px;padding:8px;font-size:.76rem;background:var(--surface);cursor:pointer}.jover .c h5{margin:0 0 4px;font-size:.8rem;color:var(--navy2)}.jover .c .mv{border-radius:6px;padding:4px;text-align:center;font-weight:700;margin:4px 0;color:#fff;background:#c3cbdc}.jover .c.low{outline:3px solid #b91c1c}.jover .c p{margin:2px 0;color:var(--t2)}.jover .c em{color:var(--t3)}
+.syncline{font-size:.78rem;color:var(--t2);margin:-6px 0 10px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}.dot.on{background:#16a34a}.dot.off{background:#ea580c}
+.savebar{margin:4px 0 14px;padding:10px 12px;border-radius:12px;font-size:.84rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--border2);background:var(--surface)}.savebar.ok{border-color:#6ee7b7;background:#ecfdf5;color:#065f46}.savebar.bad{border-color:var(--warnline);background:var(--warnbg);color:#7c2d12}
+.editing{outline:2px dashed #7c3aed!important;outline-offset:1px;background:var(--surface2)!important;cursor:not-allowed}
+.lostbox{margin:4px 0 8px;border:1.5px solid #ea580c;background:#fff7ed;border-radius:8px;padding:6px 9px;font-size:.8rem;color:#7c2d12}.lostbox q{display:block;white-space:pre-wrap;margin:3px 0;color:#1f2937;quotes:none}.lostbox .btn{padding:3px 8px;font-size:.76rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lostbox{background:#431407;color:#fed7aa}:root:not([data-theme="light"]) .lostbox q{color:#fff}}.pend{outline:2px solid #ea580c!important}
+.stsave{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px dashed var(--border2)}
+.tabs .tbboard{margin-left:auto}
+.pbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}.pbc{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--surface);font-size:.8rem}.pbc h3{margin:0 0 4px;font-size:.92rem;color:var(--navy2)}.pbc.me{border:2px solid var(--gold)}.pbar{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;margin:4px 0}.pbar i{display:block;height:100%;background:var(--gold)}.pbm{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin:6px 0}.pbm div{border-radius:5px;padding:3px 2px;text-align:center;font-size:.66rem;color:#fff;background:#c3cbdc;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.pbc ul{margin:4px 0 0;padding-left:16px}.pbc li{margin:1px 0}.pbc li.ok{color:var(--t3)}.pbc li.ng{color:var(--t2);font-weight:600}
+.jgrid{border-collapse:collapse;width:100%;min-width:820px;font-size:.78rem;table-layout:fixed}.jgrid th,.jgrid td{border:1px solid var(--border);padding:6px;vertical-align:top;text-align:left}.jgrid tr:first-child th{background:var(--navy);color:#fff;cursor:pointer}.jgrid tr:first-child th.low{background:#b91c1c}.jgrid th:first-child{width:118px;background:var(--surface2);color:var(--navy2)}.jgrid td{cursor:pointer;color:var(--t2)}.jgrid td.low{background:#fef2f2}.jgrid td.mvc{color:#fff;font-weight:700;text-align:center}.jgrid .em{color:var(--t3)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .jgrid td.low{background:#2c1416}}
+
+.omwrap{overflow-x:auto}#oneMap{min-width:860px;background:#fff;color:#1b2a4a;border-radius:12px;padding:18px 18px 14px;font-family:"Noto Sans KR",sans-serif}
+.om-per{display:flex;gap:14px;align-items:center;padding-bottom:12px;border-bottom:2px dashed #b8c4d6;margin-bottom:14px}.om-av{flex:none;width:64px;height:64px;border-radius:50%;background:#0f9d7a;color:#fff;font-size:1.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;border:3px solid #0b6b54}
+.om-per h3{margin:0 0 4px;font-size:1.15rem}.om-per ul{margin:0;padding:0;list-style:none;font-size:.82rem}.om-per li::before{content:'●';color:#0f9d7a;margin-right:6px;font-size:.7rem}
+.om-g{display:grid;grid-template-columns:78px repeat(5,1fr);gap:0}.om-g>div{padding:6px 7px;font-size:.78rem;line-height:1.4;text-align:center;border-bottom:1px solid #eef1f6}
+.om-lab{font-weight:900;text-align:left!important;color:#1b2a4a;font-size:.82rem!important;display:flex;align-items:center}
+.om-st{background:#fff;border:2px solid #0f9d7a;border-left:0;position:relative;padding:8px 14px 8px 18px!important;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}.om-st b{display:block;color:#0f9d7a;font-size:.84rem}
+.om-st.f{border-color:#dc2626;background:#fff1f1}.om-st.f b{color:#dc2626}
+.om-c{background:#eaf7f2}.om-c.alt{background:#fff}.om-c.f{background:#fff1f1}.om-c.a{outline:1.5px dashed #b45309;outline-offset:-3px}.om-c.e{color:#a0a9b8}
+.om-curve{grid-column:2/7;height:92px}.om-cards{display:contents}.om-card{border:2px solid #0f9d7a;border-radius:6px;margin:0 5px;padding:0!important;text-align:left!important;background:#fff}.om-card .h{background:#0f9d7a;color:#fff;font-weight:900;text-align:center;padding:4px;font-size:.8rem}.om-card .b{padding:6px 7px;font-size:.76rem}.om-card.neg{border-color:#dc2626}.om-card.neg .h{background:#dc2626}.om-card.mid{border-color:#8a94a6}.om-card.mid .h{background:#8a94a6}.om-card .ev{font-size:.66rem;color:#5d6679;display:block;margin-top:4px}
+.om-foot{margin-top:12px;border:2px solid #dc2626;border-radius:10px;padding:8px 12px;font-size:.8rem;background:#fff7f7}.om-foot b{color:#dc2626}.om-foot div{margin:2px 0}
+body.ombig #oneMap{position:fixed;inset:0;z-index:60;min-width:0;overflow:auto;border-radius:0;font-size:1.1em}
+.pill{display:inline-block;background:var(--gold);color:#fff;border-radius:999px;padding:2px 9px;font-size:.7rem;font-weight:700;margin-bottom:6px}
+.req{color:#dc2626;font-size:.72rem}.tagx{font-size:.72rem;font-weight:700;color:var(--gold);margin-left:6px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.flow.f3{grid-template-columns:repeat(3,1fr)}.flow>div{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:.8rem}.flow b{display:block;color:var(--navy2)}.flow span{color:var(--t2)}.flow em{font-style:normal;color:#ea580c;font-weight:700}
+@media(max-width:700px){.flow,.flow.f3{grid-template-columns:1fr 1fr}}
+.lint{font-size:.76rem;color:#c2410c;font-weight:700;min-height:0}
+.ebp{border:1.5px solid var(--border2);border-radius:12px;padding:10px 12px;background:var(--surface2)}.ebp .who{font-weight:900;color:var(--navy2);margin-bottom:4px}.ebp dl{display:grid;grid-template-columns:120px 1fr;gap:3px 10px;margin:0;font-size:.82rem}.ebp dt{color:var(--t3);font-weight:700}.ebp dd{margin:0}.ebp .drop{margin-top:8px;border-left:4px solid #dc2626;padding:4px 9px;font-size:.82rem;background:var(--surface)}
+@media(max-width:560px){.ebp dl{grid-template-columns:1fr}}
+.tree3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tree3>div{border:1px solid var(--border);border-radius:10px;padding:9px;font-size:.8rem;background:var(--surface2)}.tree3 b{display:block;font-size:.92rem}.tree3 .k1{color:#dc2626}.tree3 .k2{color:#2563eb}.tree3 .k3{color:#16a34a}.tree3 span{display:block;font-weight:700}.tree3 em{display:block;color:var(--t2)}.tree3 small{color:var(--gold);font-weight:700}
+@media(max-width:560px){.tree3{grid-template-columns:1fr}}
+.ev{display:inline-block;border-radius:6px;padding:0 6px;font-size:.7rem;font-weight:700;border:1.5px solid transparent;line-height:1.6}
+.ev.I{background:#dcfce7;color:#166534}.ev.D{background:#dbeafe;color:#1e40af}.ev.G{background:#fef3c7;color:#92400e}.ev.N{background:#fee2e2;color:#991b1b}
+.evb{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}.evb button.ev{cursor:pointer;opacity:.45;font:inherit;font-size:.72rem}.evb button.ev.on{opacity:1;border-color:currentColor}
+.evb.v{flex-direction:column;justify-content:flex-start;padding-top:20px}
+.mbox{border-radius:10px;padding:8px 10px;font-size:.82rem}.mbox.bad{background:var(--warnbg);border:1px solid var(--warnline)}.mbox b{display:block;color:#c2410c}
+.chip{border:1.5px solid var(--border2);background:var(--surface);color:var(--t2);border-radius:999px;padding:5px 11px;font:inherit;font-size:.8rem;cursor:pointer}.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cgrp{border:1px solid var(--border);border-radius:12px;padding:8px;margin-bottom:8px;display:grid;grid-template-columns:1fr 2fr;gap:8px;background:var(--surface2)}
+.csub{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cin label{font-size:.78rem;font-weight:700;color:var(--navy2)}.cin input{width:100%}
+.cmain .cin label{color:#dc2626}
+@media(max-width:700px){.cgrp{grid-template-columns:1fr}.csub{grid-template-columns:1fr}}
+.lt{overflow-x:auto}.lt-top{background:var(--navy);color:#fff;border-radius:10px;padding:8px 12px;font-weight:700;text-align:center;font-size:.88rem;margin:0 auto 12px;max-width:640px;position:relative}.lt-top small{display:block;font-weight:400;opacity:.8;font-size:.72rem}
+.lt-row{display:grid;grid-template-columns:repeat(3,minmax(170px,1fr));gap:10px;min-width:540px;position:relative}
+.lt-col{border-top:3px solid var(--gold);padding-top:8px}.lt-sub{display:grid;gap:6px;margin:8px 0 0 12px;border-left:2px solid var(--border2);padding-left:8px}
+.tb{border:1.5px solid var(--border2);border-radius:8px;padding:6px 8px;font-size:.8rem;background:var(--surface);position:relative}.tb.c{font-weight:700;border-color:var(--navy2)}.tb.empty{color:var(--t3);border-style:dashed}
+.tb.ok{border-color:#16a34a;box-shadow:inset 0 0 0 1px #16a34a}.tb.no{border-color:#dc2626;text-decoration:line-through;text-decoration-color:#dc262688}.tb .vr{display:block;font-style:normal;font-size:.7rem;font-weight:900;color:#16a34a}.tb.no .vr{color:#dc2626;text-decoration:none}
+.cklist label{display:block;padding:5px 0;border-bottom:1px dashed var(--border);font-size:.86rem}
+.pk{display:block;padding:5px 8px;border:1px solid var(--border);border-radius:8px;margin:4px 0;font-size:.84rem;cursor:pointer}
+.qz{border:1px solid var(--border);border-radius:10px;padding:8px 10px;margin:6px 0}.qz b{display:block;margin-bottom:5px;font-size:.86rem}.qo{display:block;width:100%;text-align:left;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);border-radius:8px;padding:6px 9px;margin:4px 0;font:inherit;font-size:.84rem;cursor:pointer}.qo.r{border-color:#16a34a;background:var(--okbg)}.qo.w{border-color:#ea580c;background:var(--warnbg)}.qe{font-size:.8rem;color:var(--t2)}.okc{color:#16a34a}.wc{color:#c2410c}
+.rules{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px;margin:6px 0 10px}.rules>div{border-left:4px solid var(--gold);background:var(--surface2);border-radius:6px;padding:6px 9px;font-size:.8rem}.rules b{display:block;color:var(--navy2)}
+.qrow{display:grid;grid-template-columns:1fr 2fr;gap:8px}.svrow{display:grid;grid-template-columns:2fr 140px 1.3fr;gap:8px;border-bottom:1px dashed var(--border);padding-top:6px}
+@media(max-width:700px){.qrow,.svrow{grid-template-columns:1fr}}
+.iv{border:1px solid var(--border);border-radius:12px;padding:8px 10px;margin:8px 0;background:var(--surface2)}.iv h4{margin:0 0 6px;color:var(--navy2);font-size:.88rem}
+.pnrow{display:grid;grid-template-columns:1fr 92px;gap:8px;border-bottom:1px dashed var(--border);padding-top:6px}
+.pcard{border:2px solid var(--navy2);border-radius:14px;padding:12px 14px;background:var(--surface)}.ph{display:flex;gap:10px;align-items:center;margin-bottom:8px}.av{flex:none;width:46px;height:46px;border-radius:50%;background:var(--gold);color:#fff;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center}.ph b{display:block;color:var(--navy2)}.ph q{display:block;font-size:.84rem;color:var(--t2);margin-top:2px}
+.pr{display:grid;grid-template-columns:110px 1fr;gap:8px;font-size:.84rem;padding:3px 0;border-top:1px solid var(--border)}.pl{color:var(--t3);font-weight:700}
+@media(max-width:560px){.pr{grid-template-columns:1fr}}
+.vrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:1px dashed var(--border);padding:5px 0;font-size:.84rem}
+.pmall{display:grid;gap:4px;margin:6px 0}.pmall>div{background:var(--surface2);border-radius:8px;padding:5px 9px;font-size:.84rem}.pmall b{margin-right:8px;color:var(--navy2)}
+.btn.sm{padding:2px 8px;font-size:.74rem}
+pre.pv,pre.svp{white-space:pre-wrap;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:.78rem}
+body.big .pbgrid{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}body.big .pbc{font-size:1rem}body.big .pbc h3{font-size:1.2rem}
+.mbox.good{background:var(--okbg);border:1px solid #86efac}.mbox.good b{color:#15803d}
+.wyall{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px;margin-top:10px}.wy{border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:.82rem;background:var(--surface2)}.wy b{display:block;color:var(--navy2);font-size:.8rem}.wy b span{font-weight:400;color:var(--t3)}.wy ul{margin:4px 0 0;padding-left:18px}.wy li{margin:2px 0}.wy.me{border:2px solid var(--gold);background:var(--goldbg)}
+.wpick{display:flex;justify-content:space-between;gap:8px;align-items:center;border-bottom:1px dashed var(--border);padding:4px 0}
+
+.lt2{--line:#c3cbdc;margin:4px 0}.lth{display:grid;grid-template-columns:26% 1fr 1fr;gap:0 26px;font-size:.78rem;font-weight:900;color:var(--navy2);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px}.lth b{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);align-items:center;justify-content:center;font-size:.7rem;margin-right:3px}.lth small{display:block;font-weight:400;color:var(--t3)}
+.ltb{display:grid;grid-template-columns:26% 1fr;gap:0 26px;align-items:center}
+.lq{background:#1b2a4a;color:#fff;border-radius:12px;padding:12px 14px;font-weight:900;font-size:.95rem;line-height:1.45;position:relative}.lq small{display:block;width:fit-content;background:rgba(255,255,255,.14);border-radius:6px;padding:1px 7px;font-size:.68rem;font-weight:700;margin-bottom:6px}
+.lq::after{content:'';position:absolute;right:-26px;top:50%;width:26px;border-top:3px solid var(--line)}
+.lbrs{display:grid;gap:12px;position:relative;padding-left:16px}.lbrs::before{content:'';position:absolute;left:0;top:16%;bottom:16%;border-left:3px solid var(--line)}
+.lbr{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;align-items:center;position:relative}.lbr::before{content:'';position:absolute;left:-16px;top:50%;width:16px;border-top:3px solid var(--c)}
+.lbr.t{--c:#0f766e;--cb:#e6f4f1}.lbr.p{--c:#6d4bb3;--cb:#f0ecf8}.lbr.o{--c:#b45309;--cb:#fbf1e3}
+.lbx{background:var(--cb);border-left:5px solid var(--c);border-radius:10px;padding:8px 11px;font-weight:900;color:#1b2a4a;font-size:.86rem;position:relative}.lbx small{display:block;color:var(--c);font-size:.72rem;font-weight:900}
+.lbx::after{content:'';position:absolute;right:-13px;top:50%;width:13px;border-top:2px solid var(--c)}
+.llv{display:grid;gap:6px;position:relative;padding-left:13px}.llv::before{content:'';position:absolute;left:0;top:25%;bottom:25%;border-left:2px solid var(--c)}
+.lf{border:1.5px solid var(--c);border-radius:9px;padding:6px 9px;font-size:.8rem;background:var(--surface);position:relative;color:var(--text)}.lf::before{content:'';position:absolute;left:-13px;top:50%;width:13px;border-top:2px solid var(--c)}
+.lf.empty,.lbx.empty{opacity:.5;border-style:dashed;font-weight:400}
+.lf.ok,.lbx.ok{box-shadow:0 0 0 2px #16a34a}.lf.no,.lbx.no{box-shadow:0 0 0 2px #dc2626;text-decoration:line-through;text-decoration-color:#dc262688}
+.lf .vr,.lbx .vr{display:block;font-style:normal;font-size:.68rem;font-weight:900;color:#16a34a;text-decoration:none}.lf.no .vr,.lbx.no .vr{color:#dc2626}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lbx{color:#e6eaf2}:root:not([data-theme="light"]) .lbr.t{--cb:#10302c}:root:not([data-theme="light"]) .lbr.p{--cb:#251d38}:root:not([data-theme="light"]) .lbr.o{--cb:#33240f}}
+@media(max-width:720px){.lbr::before,.lbrs::before{display:none}.lbrs{padding-left:0}.lth{display:none}.ltb{grid-template-columns:1fr}.lq{margin-bottom:12px}.lq::after{display:none}.lbr{grid-template-columns:1fr;gap:6px}.lbx::after{display:none}.llv{margin-left:10px}}
+.crit3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.crit3>div{background:var(--surface2);border-radius:10px;padding:9px 11px;font-size:.8rem}.crit3 b{display:block;color:var(--navy2);font-size:.88rem}.crit3 em{font-style:normal;color:var(--t3);font-weight:700;margin-right:5px}
+@media(max-width:640px){.crit3{grid-template-columns:1fr}}
+
+.ebht{width:100%;border-collapse:collapse;font-size:.8rem}.ebht td{border-bottom:1px dashed var(--border);padding:4px 6px;vertical-align:top}.ebht td:first-child{width:28%;font-weight:700;color:var(--navy)}.ebhn{margin-top:6px;background:var(--goldbg);border-radius:8px;padding:6px 9px;font-size:.78rem}
+
+.why{background:linear-gradient(135deg,#1e3a5f,#274b78);color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:12px}.why h2{margin:0 0 8px;font-size:1.02rem;color:#fff}.why h2 span{color:#facc15}
+.whyg{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:800px){.whyg{grid-template-columns:1fr}}.whyg>div{background:rgba(255,255,255,.1);border-radius:10px;padding:8px 10px;font-size:.8rem;line-height:1.5}.whyg b{display:block;color:#facc15;margin-bottom:2px}.whyg em{font-style:normal;font-weight:800;color:#fff;border-bottom:2px solid #facc15}
+.whyn{margin:8px 0 0;font-size:.76rem;color:#cbd5e1}
+
+.lthow{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin:6px 0}.lthow>div{flex:1 1 180px;border-radius:10px;padding:7px 9px;font-size:.78rem;line-height:1.45}.lthow b{display:block;font-size:.85rem;margin-bottom:2px}.lthow i{align-self:center;font-style:normal;font-weight:800;color:var(--gold)}
+.lth1{background:#1e3a5f;color:#fff}.lth2{background:#eef2ff;border:2px solid #4f46e5}.lth3{background:#f0fdf4;border:2px solid #16a34a}.lthow em{font-style:normal;font-weight:800}
+.cex{font-size:.72rem;color:var(--t2);margin:2px 0}.bpn{display:inline-block;background:#4f46e5;color:#fff;border-radius:5px;padding:0 6px;font-size:.7rem;margin-left:4px}
+
+.ivp{display:flex;gap:10px;align-items:center;font-size:.86rem;margin:4px 0 8px}.ivx{font-size:1.4rem;color:var(--gold);font-weight:800}.tgA,.tgB{display:inline-block;color:#fff;border-radius:6px;padding:1px 7px;font-size:.72rem;font-weight:800;margin-right:4px}.tgA{background:#0f766e}.tgB{background:#1d4ed8}
+.ivr{background:var(--goldbg);border-radius:10px;padding:7px 10px;font-size:.8rem;margin-bottom:8px}.ivr ol{margin:3px 0 3px 18px;padding:0}
+
+.gfhow{border:2px solid #7c3aed;border-radius:12px;padding:10px 12px;margin:10px 0;background:#faf5ff}.gfhow h3{margin:0 0 6px;font-size:.95rem;color:#5b21b6}.gfhow ol{margin:0 0 4px 18px;padding:0;font-size:.8rem;line-height:1.6}.gfhow li b:first-child{display:inline-block;min-width:62px;color:#5b21b6}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero">
+  <h1>프로젝트와디자인씽킹 · 로직트리 → 인터뷰 → 페르소나 완성</h1>
+  <p><b style="color:#f3c97a">오전 e비즈에서 해결책을 골랐습니다. 그 해결책이 겨냥한 원인은 진짜일까요?</b> e비즈 페르소나도 대부분 "추측"입니다. 오늘은 로직트리로 "무엇을 확인해야 하는지" 찾고, 직접 인터뷰해서 <b style="color:#f3c97a">들은 말로 페르소나를 완성</b>합니다.</p>
+  <div class="prog"><i id="progBar"></i></div><div class="progt" id="progTxt">팀을 먼저 고르세요</div>
+</div>
+<div class="warnbox" id="dupWarn" style="display:none"></div>
+<div class="tabs" id="tabs">
+  <button data-p="p1" class="on" type="button"><b>1</b>팀·출발점</button>
+  <button data-p="p2" type="button"><b>2</b>로직트리란?</button>
+  <button data-p="p3" type="button"><b>3</b>로직트리</button>
+  <button data-p="p4" type="button"><b>4</b>인터뷰 실습</button>
+  <button data-p="p5" type="button"><b>5</b>페르소나 완성</button>
+  <button data-p="p6" type="button"><b>6</b>제출</button>
+  <button data-p="pb" type="button" class="tbboard">팀 현황</button>
+</div>
+<div class="syncline" id="syncLine"><span class="dot off"></span>팀을 고르면 팀원과 함께 쓰기가 시작됩니다</div>
+
+<!-- 1 -->
+<section class="pane on" id="p1">
+  <div class="card">
+    <h2>오늘의 흐름 — 앞 단계 결과가 다음 단계 재료</h2>
+    <div class="flow">
+      <div><b>1 출발점</b><span>팀 문제 한 문장 맞추기<br>→ e비즈 페르소나 확인</span></div>
+      <div><b>2·3 로직트리</b><span>"왜?"를 두 번 물어 원인 6개<br>→ <em>추측</em>인 원인 찾기</span></div>
+      <div><b>4 인터뷰</b><span>추측을 확인할 질문 3개<br>→ 강의실에서 짝팀과 인터뷰</span></div>
+      <div><b>5 페르소나</b><span>들은 말로 고쳐 쓰기<br>→ 핵심 원인 1개</span></div>
+    </div>
+    <p class="note">시간은 팀 진행에 맞춥니다. 각 탭 아래 <b>「이 단계 저장」</b>을 누르면 팀원 화면과 팀 현황에 반영됩니다.</p>
+  </div>
+  <div class="card">
+    <h2>우리 팀 고르기</h2>
+    <div class="tgrid" id="teams"></div>
+    <div id="meBox" style="display:none;margin-top:10px">
+      <div class="grid2">
+        <div class="fld"><label>나는</label><select id="roleSel"></select><div class="hint">이름을 고르면 팀원 화면에 "○○ 쓰는 중"이 보이고, 4탭 내 칸이 열립니다.</div></div>
+        <div class="fld"><label>팀 이름 <span class="req">필수</span></label><input type="text" data-f="tname" maxlength="20" placeholder="팀이 직접 정한 이름"><div class="hint">팀 이름이 없으면 PDF를 저장할 수 없습니다.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="probCard">
+    <h2>① 팀 문제 한 문장 맞추기 <span class="tagx">각자 쓰고 → 한꺼번에 보고 → 하나로</span></h2>
+    <p class="sub"><b>중간 성찰에서 9팀 중 6팀이 팀원마다 문제를 다르게 적었습니다.</b> 각자 먼저 쓰고, 다 쓴 뒤에 서로 봅니다. 형식: <b>(누가) (어떤 상황에서) (무엇 때문에) 불편을 겪는다</b>.</p>
+    <div id="myProb"></div>
+    <div id="allProb"></div>
+    <div class="fld"><label>합친 팀 문제 한 문장</label><div class="hint">해결책(앱·AI·플랫폼)이 들어가면 문제가 아닙니다. "불편하다" 앞에 상황이 보여야 합니다.</div><textarea rows="2" data-f="prob"></textarea><div class="lint" id="probLint"></div></div>
+  </div>
+  <div class="card" id="ebCard">
+    <h2>② e비즈에서 만든 우리 페르소나</h2>
+    <p class="sub">e비즈니스학개론 고객 여정 지도(11/9)에 팀이 쓴 내용입니다. <b>5탭에서 이 내용을 불러와 인터뷰로 고쳐 씁니다.</b></p>
+    <div id="ebBox"></div>
+  </div>
+  <div class="card" id="ebhCard">
+    <h2>③ 오전 e비즈에서 찾은 문제와 잇기 <button type="button" class="btn ghost sm" id="ebhRe">다시 불러오기</button></h2>
+    <p class="sub"><b>오전에 고객이 멈추는 장면과 "누가·왜 빠지나"를 찾았습니다.</b> 오후에는 그 이유가 <b>진짜인지</b> 로직트리·인터뷰·설문으로 확인합니다.</p>
+    <div id="ebhBox"><p class="note">팀을 고르면 나타납니다.</p></div>
+    <div class="fld"><label>오늘 확인할 "멈춘 이유" (우리 말로 한 줄)</label><input type="text" data-f="ebh_cause" placeholder="고객이 무엇이 안 보여서/몰라서 멈추나"></div>
+  </div>
+  <div class="savebar" data-sb="p1"></div>
+</section>
+
+<!-- 2 -->
+<section class="pane" id="p2">
+  <div class="card">
+    <h2>로직트리 = 큰 질문을 같은 기준으로 나누어, 확인할 수 있는 작은 질문으로 만드는 구조</h2>
+    <p class="sub"><b>맨 위에 질문 하나, 아래로 갈수록 작고 구체적인 답.</b> 같은 고객 문제도 질문에 따라 세 가지 나무가 됩니다. 한눈에 "무엇이 빠졌고, 무엇을 확인해야 하는지"가 보입니다. 컨설팅·기획·공모전에서 문제를 나눌 때 가장 먼저 쓰는 도구입니다.</p>
+    <div class="tree3">
+      <div><b class="k1">왜? 트리</b><span>원인 찾기</span><em>"왜 어르신 손님은 키오스크 주문을 포기할까?"</em><small>← 오늘 이것</small></div>
+      <div><b class="k2">어떻게? 트리</b><span>해결책 찾기</span><em>"어떻게 하면 어르신이 주문을 끝까지 마칠까?"</em><small>← 오전 e비즈에서 한 것</small></div>
+      <div><b class="k3">무엇? 트리</b><span>구성 나누기</span><em>"주문 한 번은 어떤 단계로 이뤄지나?"</em><small>여정 지도 · 자료 정리</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>팀별 "왜?" 질문 — 맨 위 칸은 이렇게 씁니다</h2>
+    <p class="sub"><b>형식: 왜 (누가) (어떤 상황에서) (무엇을 못 하거나 망설이는)가?</b> "왜 고객이 불편한가?"는 너무 넓어서 아래로 쪼갤 수 없습니다. 누가·언제·무엇이 보여야 원인이 나옵니다.</p>
+    <div class="grid2"><div class="mbox bad"><b>✗ 너무 넓음</b>왜 고객이 불편한가? · 왜 매출이 안 나오나?</div><div class="mbox good"><b>✓ 쪼갤 수 있음</b>왜 보호자는 동물병원 진료비를 미리 알기 어려운가?</div></div>
+    <div class="wyall" id="whyAll"></div>
+    <p class="note">우리 팀 칸은 노란 테두리로 보입니다. 3탭에서 하나를 골라 넣고 우리 팀 말로 고칩니다.</p>
+  </div>
+  <div class="card">
+    <h2 id="exTitle">예시 — 동네 패스트푸드점 키오스크</h2>
+    <div id="exTree"></div>
+    <p class="note" id="exNote"></p><p class="note">오른쪽 색 표시가 근거입니다. <span class="ev I">인터뷰</span> 사람에게 들은 말 · <span class="ev D">자료</span> 통계·기사·관찰 · <span class="ev G">추측</span> 아직 확인 안 함. <b>추측은 나쁜 게 아니라 "확인할 목록"입니다.</b></p>
+  </div>
+  <div class="card">
+    <h2>좋은 로직트리의 3가지 기준</h2>
+    <div class="crit3">
+      <div><b><em>01</em>같은 기준으로 나눈다</b>큰 갈래 3개는 하나의 기준(예: 이용 전·중·후)에서 나옵니다.</div>
+      <div><b><em>02</em>겹침과 빠진 부분을 점검한다</b>가능한 한 중복 없이, 빠짐없이 — 아래 MECE</div>
+      <div><b><em>03</em>확인할 수 있을 때까지 나눈다</b>관찰·질문·기록으로 맞는지 확인할 수 있는 수준까지</div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>좋은 로직트리의 규칙 = MECE <span class="tagx">미시</span></h2>
+    <p class="sub"><b>겹치지 않게(Mutually Exclusive), 빠짐없이(Collectively Exhaustive).</b></p>
+    <div class="grid2">
+      <div class="mbox bad" id="meceOv"><b>✗ 겹침</b>"메뉴가 어려움" · "용어가 낯섦" → 사실 같은 말. 두 칸을 바꿔 넣어도 말이 되면 겹친 것</div>
+      <div class="mbox bad" id="meceGap"><b>✗ 빠짐</b>원인이 모두 "사람" 쪽 → "가게(환경)" 쪽 원인이 통째로 없음</div>
+    </div>
+    <h3>MECE를 쉽게 만드는 방법: 나누는 기준을 먼저 고른다</h3>
+    <div class="tscroll"><table>
+      <tr><th style="width:28%">기준</th><th>이렇게 나뉨</th><th style="width:30%">잘 맞는 문제</th></tr>
+      <tr><td><b>사람 · 서비스 · 환경</b></td><td>고객 탓? 서비스(앱·가게) 탓? 주변 상황 탓?</td><td>대부분의 문제</td></tr>
+      <tr><td><b>이용 전 · 중 · 후</b></td><td>찾을 때 / 쓸 때 / 쓰고 나서</td><td>과정이 긴 서비스(예약·주문)</td></tr>
+      <tr><td><b>고객 · 제공자 · 규칙</b></td><td>쓰는 사람 / 파는 사람 / 제도·약관</td><td>양쪽이 있는 거래(정비소, 병원)</td></tr>
+      <tr><td><b>돈 · 시간 · 마음</b></td><td>비용 부담 / 시간 부족 / 불안·귀찮음</td><td>대학생 생활 문제</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>흔한 실수 3가지</h2>
+    <div class="qgrid">
+      <div class="qi ng"><span class="qs">1</span><div><b>증상을 원인 칸에 씀</b><br><span class="note">"불편하다", "어렵다"는 증상입니다. 쓰고 나면 "왜?"를 한 번 더 물으세요.</span></div></div>
+      <div class="qi ng"><span class="qs">2</span><div><b>해결책을 원인 칸에 씀</b><br><span class="note">"앱이 없어서"는 원인이 아닙니다. 앱이 없던 시절에도 사람들은 어떻게든 했습니다.</span></div></div>
+      <div class="qi ng"><span class="qs">3</span><div><b>하위 원인이 위 원인과 상관없음</b><br><span class="note">하위 원인은 바로 위 칸에 "왜?"를 물었을 때의 답이어야 합니다.</span></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>확인 문제 3개 — 맞혀야 3탭이 쉬워집니다</h2>
+    <div id="quiz"></div>
+    <p class="note" id="quizMsg"></p>
+  </div>
+  <div class="savebar" data-sb="p2"></div>
+</section>
+
+<!-- 3 -->
+<section class="pane" id="p3">
+  <div class="card">
+    <h2>맨 위 질문 — "왜 ___는 ___할까?"</h2>
+    <p class="sub"><b>e비즈 고객 여정 지도에서 감정이 가장 떨어진 지점을 질문으로 바꿨습니다.</b> 팀 문제와 맞게 고쳐 쓰세요. 질문에 해결책이 들어가면 안 됩니다.</p>
+    <div class="exs" id="topEx"></div>
+    <div class="fld"><textarea rows="2" data-f="lt_top" placeholder="왜 (누가) (어떤 상황에서) (무엇을 못 / 안) 할까?"></textarea><div class="lint" id="topLint"></div></div>
+  </div>
+  <div class="card">
+    <h2>원인 3개를 나누는 기준</h2>
+    <div class="row" id="basisBtns"></div>
+    <div class="fld" id="basisX" style="display:none"><input type="text" data-f="lt_basis_x" placeholder="우리가 정한 기준 (예: 학기 초 · 중 · 말)"></div>
+  </div>
+  <div class="card">
+    <h2>"왜?"를 두 번 — 큰 원인 3개 → 하위 원인 2개씩</h2>
+    <div class="lthow">
+      <div class="lth1"><b>맨 위 질문</b><span>왜 ___는 ___할까?</span></div><i>왜? →</i>
+      <div class="lth2"><b>큰 원인 3개</b><span>위에서 고른 <u>기준 3칸</u>에 하나씩.<br>"<em>[기준 칸] — 고객이 겪는 어려움</em>"<br>예: 예약할 때 — 예약을 하나씩 따로 해야 함</span></div><i>왜? →</i>
+      <div class="lth3"><b>하위 원인 2개씩</b><span>큰 원인에 <u>다시 "왜?"</u>. 눈에 보이는 <em>실제 장면·행동</em>으로.<br>예: 가게마다 예약 방법이 다름 / 인기 장소는 예약이 빨리 마감됨</span></div>
+    </div>
+    <p class="sub"><b>맞게 썼는지 확인:</b> 하위 원인을 읽고 "그래서 → 큰 원인"으로 이어지면 맞습니다. 칸마다 <b>근거</b>(인터뷰·자료·추측)를 고르세요. <b>추측</b>이 4탭 인터뷰 질문이 됩니다.</p>
+    <div id="causeIn"></div>
+  </div>
+  <div class="card">
+    <h2>우리 로직트리 <span class="tagx">자동</span></h2>
+    <div id="ourTree"><p class="note">원인을 쓰면 그려집니다.</p></div>
+  </div>
+  <div class="card">
+    <h2>MECE 점검 (팀이 소리 내어 확인)</h2>
+    <div class="cklist">
+      <label><input type="checkbox" data-ck="m1"> <b>원인 3개가 서로 겹치지 않는다</b> <span class="note">두 칸을 바꿔 넣어도 말이 되면 겹침</span></label>
+      <label><input type="checkbox" data-ck="m2"> <b>큰 원인이 빠지지 않았다</b> <span class="note">e비즈 여정 지도의 속마음이 어느 칸에든 들어가나?</span></label>
+      <label><input type="checkbox" data-ck="m3"> <b>원인 칸에 증상·해결책이 없다</b> <span class="note">"불편함", "앱이 없음"이 있으면 "왜?" 한 번 더</span></label>
+      <label><input type="checkbox" data-ck="m4"> <b>하위 원인은 위 칸의 "왜?"에 대한 답이다</b></label>
+    </div>
+    <div id="meceAuto"></div>
+    <details class="ownb"><summary>AI에게 "지적만" 받기 (선택)</summary>
+      <p class="note">AI가 다시 그려 주면 우리 생각이 사라집니다. 아래 프롬프트는 "고쳐 쓰지 말고 문제만 3개"를 요구합니다. 받은 지적 중 받아들인 것만 위 칸을 직접 고치세요.</p>
+      <div class="row"><button class="btn ghost" type="button" data-cp="mece">프롬프트 복사</button><button class="btn ghost" type="button" data-show="mece">보기</button></div><pre class="pv" id="pv_mece" style="display:none"></pre>
+      <div class="fld"><label>AI 지적 중 받아들인 것 / 받아들이지 않은 것과 이유</label><textarea rows="2" data-f="ai_mece"></textarea></div>
+    </details>
+  </div>
+  <div class="card">
+    <h2>오늘 인터뷰로 확인할 원인 고르기 <span class="tagx">최대 3개</span></h2>
+    <p class="sub"><b>근거가 "추측"이고, 맞으면 우리 서비스가 크게 달라지는 원인</b>을 고르세요. <b>오전 e비즈 해결책이 겨냥한 원인은 꼭 넣으세요</b> — 틀리면 해결책도 바뀝니다.</p>
+    <div id="pickV"></div>
+  </div>
+  <div class="savebar" data-sb="p3"></div>
+</section>
+
+<!-- 4 -->
+<section class="pane" id="p4">
+  <div class="card">
+    <h2>인터뷰 = 짐작을 확인하는 가장 빠른 방법</h2>
+    <p class="sub"><b>"짐작·검색·AI는 근거가 아니다. 사람을 만난 기록이 근거다."</b> 중간 성찰에서 가장 많이 틀린 개념이 공감(정답률 60%)이었습니다.</p>
+    <div class="rules">
+      <div><b>1 지난 일을 묻는다</b><span>"쓰실 건가요?"(미래) ✗ → "<b>마지막으로</b> ○○했을 때 어땠어요?" ○</span></div>
+      <div><b>2 답을 넣어 묻지 않는다</b><span>"비싸서 불편하시죠?" ✗ → "그때 무엇이 제일 신경 쓰였어요?" ○</span></div>
+      <div><b>3 예/아니오로 끝내지 않는다</b><span>"불편했나요?" ✗ → "어떻게 하셨어요?" ○</span></div>
+      <div><b>4 더 깊이 — "그건 왜요?"</b><span>답이 나오면 한 번 더: "그때 어떻게 하셨어요?", "왜 그렇게 하셨어요?"</span></div>
+      <div><b>5 들은 말 그대로 적는다</b><span>요약·해석 금지. 따옴표 안에 그 사람 말투로</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div id="qEx" class="exs"></div></div>
+  <div class="card">
+    <h2>좋은 질문 고르기 — 4문제</h2>
+    <div id="qquiz"></div>
+  </div>
+  <div class="card">
+    <h2>우리 인터뷰 질문 3개</h2>
+    <p class="sub"><b>3탭에서 고른 원인마다 질문 하나.</b> 질문이 규칙에 어긋나면 바로 아래에 주황색으로 알려 줍니다.</p>
+    <div id="qIn"></div>
+  </div>
+  <div class="card">
+    <h2>강의실 짝 인터뷰 — 짝팀 학생과 서로 인터뷰</h2>
+    <div id="ivPair"></div>
+    <div class="flow f3">
+      <div><b>질문하는 사람</b><span>질문 3개 + "그건 왜요?"</span></div>
+      <div><b>적는 사람</b><span>들은 말 그대로 아래 칸에</span></div>
+      <div><b>대답하는 사람</b><span>짝팀 학생 (우리 고객과 비슷한 경험이 있으면 더 좋음)</span></div>
+    </div>
+    <p class="note">실명·연락처는 쓰지 않습니다. "경영학과 1학년, 자취 2년차"처럼 특징만. 대상자가 우리 고객과 다르면 그것도 적습니다. <b>다른 팀 질문에도 성실하게 대답해 주세요.</b></p>
+  </div>
+  <div class="card">
+    <h2>인터뷰 기록</h2>
+    <p class="sub"><b>수업 중 2명 + 과제(실제 사용자) 1인 1명.</b> 기록을 하나 이상 쓰면 아래 설문 문항의 재료가 됩니다. 각 기록은 쓴 사람이 담당합니다.</p>
+    <div id="ivIn"></div>
+  </div>
+  <div class="card" id="svCard">
+    <h2>온라인 설문 만들기 — 인터뷰로 들은 것이 "얼마나 많은 사람"의 이야기인지</h2>
+    <p class="sub"><b>인터뷰 = 왜·어떻게를 깊이(몇 명) · 설문 = 얼마나 많이(여러 명, 숫자).</b> 인터뷰에서 나온 원인을 설문으로 숫자로 확인합니다. 구글 설문지·네이버 폼 중 편한 것으로 만듭니다.</p>
+    <div class="rules">
+      <div><b>1 첫 질문은 대상 거르기</b><span>"최근 3개월 안에 ○○한 적이 있나요?" — 경험 없는 사람 답은 따로 봄</span></div>
+      <div><b>2 한 질문에 하나만</b><span>"가격과 품질이 만족스러웠나요?" ✗ → 두 질문으로 나누기</span></div>
+      <div><b>3 답을 넣어 묻지 않기</b><span>"비싼 진료비가 불편하셨죠?" ✗ → "가장 신경 쓰인 것은?" + 보기</span></div>
+      <div><b>4 보기도 MECE</b><span>겹치지 않게, 빠짐없이 — 마지막 보기는 "기타(직접 입력)"</span></div>
+      <div><b>5 1분 · 5문항 · 개인정보 X</b><span>이름·학번·연락처를 묻지 않습니다</span></div>
+    </div>
+    <div class="grid2">
+      <div class="fld"><label>이 설문으로 확인할 원인</label><select data-f="sv_c" id="svC"></select></div>
+      <div class="fld"><label>누구에게 (대상)</label><input type="text" data-f="sv_who" placeholder="누구에게 묻나 — 우리 페르소나와 같은 사람"></div>
+      <div class="fld"><label>어디에 뿌리나 (배포 채널)</label><input type="text" data-f="sv_ch" placeholder="어디에 올리나 — 그 사람들이 모이는 단톡방·커뮤니티"></div>
+      <div class="fld"><label>목표 응답 수 · 마감</label><input type="text" data-f="sv_n" placeholder="목표 인원 · 마감일"></div>
+    </div>
+    <div class="exs" id="svEx"></div>
+    <div id="svIn"></div>
+    <div class="row"><button class="btn gold" type="button" data-cp="survey">설문 문항 복사 (폼에 붙여 넣기)</button><button class="btn ghost" type="button" data-show="survey">보기</button><button class="btn ghost" type="button" data-cp="svai">AI 점검 프롬프트 복사</button><button class="btn ghost" type="button" data-show="svai">AI 점검 프롬프트 보기</button></div>
+    <pre class="pv" id="pv_survey" style="display:none"></pre><pre class="pv" id="pv_svai" style="display:none"></pre>
+    <p class="note">AI에게는 <b>고쳐 쓰기가 아니라 규칙 위반 지적만</b> 받습니다. 받아들인 지적만 직접 고치세요.</p>
+    <div class="gfhow">
+      <h3>구글 폼으로 설문 만들고 링크 받기 — 10분</h3>
+      <ol>
+        <li><b>열기</b> 학교 구글 계정으로 <a href="https://forms.google.com" target="_blank" rel="noopener">forms.google.com</a> → <b>빈 양식(+)</b></li>
+        <li><b>제목</b> 첫 칸에 설문 제목 (예: 우리 팀 주제 + "1분 설문")</li>
+        <li><b>문항 넣기</b> 위 「설문 문항 복사」 → 질문마다 오른쪽 <b>⊕</b> → 질문 칸에 질문 붙여 넣기 → 유형 <b>객관식</b> → 보기 칸에 보기 여러 줄을 한 번에 붙여 넣으면 줄마다 보기가 하나씩 생깁니다 → 마지막에 <b>"기타" 추가</b></li>
+        <li><b>설정</b> 위쪽 <b>설정</b> 탭 → 응답 → <b>이메일 주소 수집: 수집 안함</b> · <b>로그인 필요/응답 1회로 제한: 끄기</b> · <b>"동의대 사용자로 제한"이 보이면 끄기</b> (켜져 있으면 학교 밖 사람이 응답 못 함)</li>
+        <li><b>링크</b> 오른쪽 위 <b>보내기</b> → 🔗(링크) 탭 → <b>URL 단축</b> 체크 → <b>복사</b> → 아래 「만든 설문 링크」 칸에 붙여 넣기</li>
+        <li><b>미리 테스트</b> 링크를 내 휴대폰에서 열어 직접 한 번 응답 → 문제없으면 배포 (테스트 응답은 결과 요약에서 빼기)</li>
+        <li><b>배포</b> 아래 「배포 문구 복사」 → 우리 고객이 모이는 단톡방·커뮤니티에 붙여 넣기</li>
+        <li><b>결과 보기</b> 폼 위쪽 <b>응답</b> 탭 → 요약 그래프 → 다음 수업 전에 「결과 요약」에 숫자 그대로</li>
+      </ol>
+      <p class="note">태블릿·휴대폰은 앱 대신 브라우저(크롬·사파리)에서 forms.google.com 으로 만들면 됩니다. 팀원 한 명이 만들고, 오른쪽 위 ⋮ → <b>공동작업자 추가</b>로 팀원을 넣으면 함께 고칠 수 있습니다.</p>
+    </div>
+    <div class="grid2">
+      <div class="fld"><label>만든 설문 링크</label><input type="url" data-f="sv_url" placeholder="https://forms.gle/…"><div class="hint">설정: 이메일 수집 안함 · 로그인 필요 끄기 · 동의대 사용자로 제한 끄기</div><div class="row"><button class="btn ghost sm" type="button" data-cp="svmsg">배포 문구 복사</button><a class="btn ghost sm" id="svOpen" target="_blank" rel="noopener" style="display:none">내 설문 열어 보기</a></div></div>
+      <div class="fld"><label>결과 요약 (다음 수업 전에)</label><textarea rows="2" data-f="sv_res" placeholder="○명 중 대상 ○명 · 가장 많이 고른 답 — 실제로 나온 숫자만"></textarea></div>
+    </div>
+  </div>
+  <div class="savebar" data-sb="p4"></div>
+</section>
+
+<!-- 5 -->
+<section class="pane" id="p5">
+  <div class="card">
+    <h2>완성도 있는 페르소나 = 칸마다 근거가 있는 한 사람</h2>
+    <p class="sub"><b>평균적인 고객이 아니라, 들은 말로 만든 구체적인 한 사람.</b> 칸 오른쪽에서 근거를 고르세요. <span class="ev I">들은 말</span>이 많을수록 완성도가 높습니다.</p>
+    <p class="sub"><b>e비즈 고객 여정 지도(11/9)에 쓴 페르소나가 칸에 미리 들어가 있습니다.</b> 처음엔 모두 <span class="ev G">추측</span> — 인터뷰에서 들은 말로 고친 칸만 <span class="ev I">들은 말</span>로 바꿉니다.</p><div class="row"><button class="btn ghost sm" type="button" data-fill="eb">지운 칸만 e비즈 내용으로 다시 채우기</button><span class="note" id="msg_eb"></span></div><p class="note">불러온 칸은 모두 <span class="ev G">추측</span>으로 표시됩니다. <b>인터뷰로 확인한 칸만 「들은 말」로 바꾸세요.</b> e비즈 속마음 문장은 팀이 지어낸 말이라 인용으로 쓰려면 실제로 들은 말로 바꿔야 합니다.</p><div></div>
+    <div id="pnIn"></div>
+  </div>
+  <div class="card">
+    <h2>우리 페르소나 카드 <span class="tagx">자동</span></h2>
+    <div id="pnCard"></div>
+    <div id="pnChk"></div>
+  </div>
+  <div class="card">
+    <h2>로직트리로 돌아가기 — 인터뷰로 맞았나?</h2>
+    <p class="sub"><b>확인한 원인마다 결과를 고르면 나무 그림에 표시됩니다.</b></p>
+    <div id="verIn"></div>
+    <div class="fld"><label>그래서 우리 팀이 다음 주에 집중할 핵심 원인 1개</label><select data-f="core" id="coreSel"></select><div class="hint">영향이 크고, 인터뷰로 확인됐고, 우리가 손댈 수 있는 원인. 다음 주 아이디어 회의의 출발 질문이 됩니다.</div></div>
+    <div class="fld"><label>이 원인을 고른 이유 한 줄 (들은 말을 근거로)</label><textarea rows="2" data-f="core_why"></textarea></div>
+    <div class="exs" id="hmwOut"></div>
+  </div>
+  <div class="savebar" data-sb="p5"></div>
+</section>
+
+<!-- 6 -->
+<section class="pane" id="p6">
+  <div class="card">
+    <h2>과제 — 실제 사용자 인터뷰 1인 1명 + 온라인 설문 배포 (다음 수업 전까지)</h2>
+    <p class="sub"><b>교실 짝은 연습입니다. 진짜 고객을 만나야 근거가 됩니다.</b> 같은 질문 3개로 하고, 4탭 「과제」 칸에 기록합니다. 설문은 4탭 링크를 배포 채널에 올리고 결과 요약을 적습니다. 결과로 5탭 근거 표시를 고칩니다.</p>
+    <div class="fld"><label>누가 누구를 만나나 (역할로, 실명 X)</label><textarea rows="3" data-f="hw" placeholder="팀원 — 인터뷰할 사람 (관계·특징만, 상대 이름은 쓰지 않기)"></textarea></div>
+  </div>
+  <div class="card">
+    <h2>출구 질문 (각자 생각하고 팀이 한 줄로)</h2>
+    <div class="fld"><label>Q1. MECE를 한 문장으로 설명하면?</label><textarea rows="2" data-f="x1"></textarea></div>
+    <div class="fld"><label>Q2. 오늘 인터뷰에서 우리 짐작과 가장 달랐던 말은?</label><textarea rows="2" data-f="x2"></textarea></div>
+    <div class="fld"><label>오늘 가장 헷갈렸던 것</label><textarea rows="2" data-f="x3"></textarea></div>
+  </div>
+  <div class="card">
+    <h2>제출 점검 · 저장</h2>
+    <div class="qgrid" id="subChk"></div>
+    <p class="note" style="margin-top:8px">제출: 아래 PDF → <b>DOOR</b>. 산출물(로직트리 · 인터뷰 기록 · 페르소나)은 최종 결과보고서 "고객 이해" 절의 근거가 됩니다.</p>
+    <div class="row"><button class="btn" id="pdfBtn" type="button">결과 보고서 PDF로 저장</button> <button class="btn ghost" id="printBtn" type="button">인쇄 창으로 열기</button></div>
+    <p class="note" id="prMsg">PDF가 내려받아집니다. 안 되면 「인쇄 창으로 열기」 → "대상"에서 PDF로 저장.</p>
+    <h3>백업 파일 (서버 연결이 끊겼을 때만)</h3>
+    <p class="note">평소에는 팀 서버에 자동 저장됩니다. 위쪽 표시가 <b>주황 점</b>일 때만 사용하세요. 열면 빈 칸만 채웁니다.</p>
+    <div class="row"><button class="btn ghost" id="saveFile" type="button">작업 파일 저장</button><label class="btn ghost" style="cursor:pointer">작업 파일 열기<input type="file" id="openFile" accept=".json,application/json" style="display:none"></label></div>
+    <p class="note" id="impMsg"></p>
+    <h3>이전 버전</h3><p class="note">1분마다 자동 보관(최근 30개).</p><div id="histBox"></div>
+  </div>
+  <div class="savebar" data-sb="p6"></div>
+</section>
+<section class="pane" id="pb">
+  <div class="card">
+    <h2>팀 현황 — 모든 팀의 진행 상황</h2>
+    <p class="sub">20초마다 새로 고칩니다. 진행 단계만 보이고 다른 팀의 글 내용은 보이지 않습니다.</p>
+    <div class="row"><button class="btn ghost" type="button" id="bigBtn">강의실 화면 크게</button></div>
+    <div class="pbgrid" id="pbGrid"></div>
+  </div>
+</section>
+<p class="note">e비즈 페르소나와 회색 (예)는 참고용이며 확인 전에는 모두 [추측]입니다. 인터뷰 대상의 실명·연락처는 이 페이지와 AI에 넣지 않습니다.</p>
+</div>
+<div id="printReport"></div>
+<script>
+(function(){
+var EB={
+ "1팀": {
+  "p_name": "민서 · 20세 · 대학가 근처 자취 중인 대학교 1학년",
+  "p_sit": "평일에는 수업과 과제를 하고 저녁에는 아르바이트까지 하느라 세탁물을 맡기거나 택배를 찾으러 갈 시간이 부족함",
+  "p_goal": "생활에 필요한 일을 다른 사람에게 맡기고 학업과 개인 시간에 집중하고 싶음 / 현재는 직접 세탁소에 방문하거나 편의점과 마트에서 필요한 물건을 구매함",
+  "p_crit": "대행 비용과 처리 시간",
+  "p_fear": "물건이 분실되거나 요청한 내용과 다르게 처리될 가능성, 추가 비용 발생",
+  "p_chan": "학교 커뮤니티, 친구 추천, 카카오톡, 인스타그램, 배달 앱",
+  "p_limit": "아르바이트와 수업으로 시간이 부족하고 생활비가 한정적임. 새로운 앱은 사용 방법이 복잡하면 이용을 망설임",
+  "p_other": "이용자 민서가 서비스 비용을 부담하고, 대행 기사가 요청받은 생활 업무를 수행함",
+  "lw_why": "서비스 이용 요금이 예상보다 비싸거나 추가 비용이 발생할 수 있고, 물건을 맡긴 후 제대로 전달되고 있는지 확인하기 어려워 불안함을 느낌. 특히 결제 후 진행 상황을 알 수 없다는 점에서 서비스 이용을 망설일 수 있음.",
+  "lw_back": "시스템: 고객의 서비스 요청과 수거·전달 장소, 희망 시간을 확인하고 이용 요금을 계산함.\nAI: 요청 내용을 분석하고 지역과 시간대가 비슷한 주문을 묶어 수행자와 이동 경로를 배정함.\n사람: 대행 기사가 물품을 수거하고 요청 사항에 맞게 처리한 후 고객에게 전달함.",
+  "as_q": "자취생은 세탁물 수거 및 장보기 대행 서비스를 이용할 때 진행 상황과 완료 여부를 사진 및 알림으로 확인할 수 있으면 서비스를 더 자주 이용할 것이다.",
+  "ai_guess": "고객이 서비스 신청 단계에서 물품 분실이나 요청 사항 누락을 가장 크게 걱정할 것이라고 판단한 부분. 실제 고객 인터뷰를 진행하지 않았으므로 이러한 불안감이 실제로 가장 큰 불편인지는 확인되지 않았다.",
+  "fstage": "앱에서 원하는 서비스를 선택하고 요청 사항과 수거 장소를 입력함",
+  "fq": "민서 “내가 적은 내용대로 제대로 처리해 줄까? 물건이 없어지거나 잘못 전달ㄷ",
+  "fp": "요청 사항이 정확하게 전달되었는지, 물품이 안전하게 수거 및 전달될지 확인하기 어려울 수 있음",
+  "quotes": [
+   "민서 “세탁물이나 택배 찾으러 갈 시간이 없는데 이런 것도 대신해 준다고?“",
+   "민서 “편리할 거 같긴 한데, 직접 다녀오는 것보다 비용이 너무 비싸면 고민 되겠는데?”",
+   "민서 “내가 적은 내용대로 제대로 처리해 줄까? 물건이 없어지거나 잘못 전달ㄷ",
+   "민서 \"결제는 했는데 추가 비용이 발생하지는 않을까? 내가 맡긴 물건이 제대로 수거되고 있는지 궁금하다.\"",
+   "민서 \"이번에는 편하게 이용해서 좋았어. 다음에도 필요할 때 이용하고 싶은데 다른 서비스도 믿고 맡길 수 있을까?\""
+  ]
+ },
+ "컨디션난조": {
+  "p_name": "김민지 · 24살 · 반려견을 키우는 대학생",
+  "p_sit": "키우는 강아지가 갑자기 아파서 동물병원을 찾아야 하는데 주변 병원들의 진료비와 정보를 모름.",
+  "p_goal": "진료비가 합리적이고 믿을 수 있는 병원을 찾고 싶음 / 네이버 검색과 블로그 후기를 이용함.",
+  "p_crit": "진료비와 병원 후기",
+  "p_fear": "비싼 진료비를 내거나 믿을 수 없는 병원을 선택할까 봐 걱정함.",
+  "p_chan": "네이버, 네이버 지도, 인스타그램, 반려동물 관련 카페",
+  "p_limit": "반려동물 의료 지식이 부족하고 여러 병원의 가격과 정보를 일일이 비교하기 어려움.",
+  "p_other": "보호자가 직접 진료비를 부담하고 동물병원에서 진료 서비스를 제공함.",
+  "lw_why": "반려동물 커뮤니티에서 추천받은 병원이라도 실제 진료비와 서비스 수준을 미리 알기 어려워 불안하고, 여러 곳에 직접 문의해야 해서 번거로움을 느낌.",
+  "lw_back": "사람: 보호자가 반려동물의 증상과 필요한 진료 정보를 입력하고 병원을 선택함.\nAI: 입력된 정보를 바탕으로 병원 정보와 진료 항목을 정리하고 비교할 수 있도록 도움.\n시스템: 등록된 병원의 위치, 진료 항목, 가격 및 후기 정보를 동일한 기준으로 분류하고 비교함.",
+  "as_q": "반려견 보호자는 병원별 항목별 진료비 세부 정보와 실제 이용 후기를 한눈에 비교해 제공하면, 네이버 검색 대신 우리 플랫폼을 통해 동물병원을 선택하고 예약할 것이다.",
+  "ai_guess": "보호자들이 단순히 가까운 거리나 최저가 진료비만 보고 병원과 장례 업체를 선택할 것이라고 단정한 점",
+  "fstage": "\"진료비와 병원 후기 비교\"",
+  "fq": "병원비 차이가 이렇게 난다고?",
+  "fp": "1",
+  "quotes": [
+   "오 뭐지.. 반려동물 병원앱?",
+   "병원비 차이가 이렇게 난다고?",
+   "정말 신뢰할 수 있는 리뷰들이네",
+   "진료비를 알려주니깐 이해가 생기네",
+   "이렇게 알람이 오니깐 놓치지 않고 알 수 있네"
+  ]
+ },
+ "8팀": {
+  "p_name": "이 사장님 | 여러 음식점을 혼자 운영하는 50대",
+  "p_sit": "가게 영업이 끝난 밤 12시 이후 개인 시간을 사용하여 리뷰 답변을 작성. 리뷰가 밀릴수록 답변이 늦어지고 매장에 반영하기 곤란.",
+  "p_goal": "일반 리뷰나 불만 리뷰를 대신 작성하는 것/리뷰를 직접 확인한 후 답변을 작성.",
+  "p_crit": "리뷰 답변의 정확성, 작성 시간 , 매장별 말투와 일관성",
+  "p_fear": "답변을 일일이 확인하여 수정해야 하는 상황(믿지 못하는 경우)",
+  "p_chan": "인스타그램,당근,자영업 네이버 카페",
+  "p_limit": "무료 생성형 AI 사용, 리뷰 관리에 큰 관심이 없음, 구독 1만 원 이하만",
+  "p_other": "매니저(직원) --- 규모가 큰 음식점의 경우 리뷰 관리와 답변 업무는 매니저나 담당 직원에게 맡겨 사용함.",
+  "lw_why": "",
+  "lw_back": "",
+  "as_q": "",
+  "ai_guess": "",
+  "fstage": "",
+  "fq": "",
+  "fp": "",
+  "quotes": [
+   "\"AI가 나 대신 리뷰글에 답변해준다고?\""
+  ]
+ },
+ "킥오프": {
+  "p_name": "김민준(가명) · 23살 대학생, 여자친구와 주말마다 데이트 장소를 찾는 대학생",
+  "p_sit": "여자친구와 주말에 부산으로 1박 2일 여행을 계획하는 상황. 맛집과 관광지를 각각 검색하고 이동 경로와 운영 시간을 확인해야 하며, 예약도 업체마다 따로 진행해야 해서 시간과 비용적인 손실이 발생함.",
+  "p_goal": "여행이나 데이트 장소를 한 번에 추천받고, 이동 일정과 시간표를 자동으로 구성하며, 여러 음식점과 관광지를 한 번에 예약하고 싶음. 현재는 네이버 지도, 블로그, SNS 등을 이용해 장소를 하나씩 검색하고 개별적으로 예약함.",
+  "p_crit": "이동 거리와 시간, 전체 여행 및 데이트 비용",
+  "p_fear": "추천받은 장소가 실제 후기와 다르거나 만족스럽지 않을 수 있다는 점 예약이 제대로 되지 않거나 이동 시간이 예상보다 길어지는 것",
+  "p_chan": "인스타그램, 네이버 지도, 네이버 블로그, 유튜브, 카카오톡",
+  "p_limit": "대학생이라 사용할 수 있는 예산이 한정적임 여행이나 데이트 계획을 세울 시간이 부족함 여러 앱을 번갈아 사용하는 것이 번거로움",
+  "p_other": "김민준 본인과 여자친구가 데이트 및 여행 비용을 함께 부담함 예약 과정에서 문제가 생기면 일정 변경이나 취소에 따른 시간적·금전적 손실이 발생함",
+  "lw_why": "고객은 공유된 타임테이블을 자신의 여행 날짜와 숙소 위치에 맞게 수정하고, 추천 장소의 리뷰를 참고해 일정을 구성한다. 그러나 실제 예약 가능 시간이나 영업시간이 일정표와 다르면 다시 장소를 검색하고 이동 동선을 조정해야 한다. 특히 여러 업체의 예약정보가 분리되어 있어 일정과 예약이 정확하게 일치하는지 확신하기 어렵다. 따라서 ③단계는 감정 점수가 +2점으로 높지만, 예약 가능 여부와 일정의 실행 가능성을 최종 확인해야 하는 핵심 불안 지점이다. [근거: A — 팀이 작성한 고객 여정 지도·가설, 실제 고객 검증 필요]",
+  "lw_back": "시스템(규칙·저장): 이용자가 선택한 공유 타임테이블과 여행 날짜, 숙소 위치, 예약시간을 불러온다. 장소별 예상 체류시간과 이동시간을 계산하고 영업시간·예약시간과 비교해 충돌을 검사한다. 충돌이 발견되면 해당 구간과 원인을 표시하고, 변경 전 일정도 보존한다.\nAI(이해·판단·작성): 이용자의 예산·취향과 공유 일정 및 리뷰 정보를 참고해 방문 순서 변경, 대체 관광지 추천, 이동 동선 조정 등의 수정안을 제시한다. 확인 가능한 날씨·현지 상황 데이터가 있다면 이를 반영하며, 검증되지 않은 예약 가능 여부는 '확인 필요'로 표시한다.\n사람(확인·승인·실행): 고객은 실제 이용자 리뷰와 AI 수정안을 비교하고, 공식 예약 페이지에서 이용 가능 시간과 취소 조건을 확인한 후 최종 일정을 확정한다. 운영자는 잘못된 장소 정보와 리뷰 신고를 검토하고, 필요한 경우 정보를 수정한다.",
+  "as_q": "여행객은 일정에 충돌이 발생했을 때 AI가 대체 일정과 장소를 추천해 주면 직접 검색하고 수정하는 것보다 편리하다고 느끼며, 추천 일정을 이용할 것이다",
+  "ai_guess": "대학생 고객이 가격을 가장 중요하게 생각하고, 데이트 및 여행 비용을 여자친구와 함께 부담한다고 가정한 점.",
+  "fstage": "여행 중·다음 여행",
+  "fq": "\"이번 여행은 계획대로 잘 다녀왔네. 다음에도 이 앱으로 코스를 추천받고 예약하면 편하겠다.\"",
+  "fp": "방문한 장소의 후기를 남기는 과정이 번거로울 수 있고, 다음 여행에서도 취향에 맞지 않는 장소가 추천될 수 있음.",
+  "quotes": [
+   "\"이런 앱이 있으면 데이트 코스를 찾는 시간을 줄이고 예약까지 한 번에 할 수 있겠는데?\"",
+   "\"다른 사람이 짜놓은 코스를 그대로 사용할 수 있어서 편하네. 우리 일정에 맞게 시간과 장소만 조금 바꾸면 되겠다.\"",
+   "\"예약까지 한 번에 할 수 있어서 편하네. 이제 일정에 맞춰 움직이기만 하면 되겠다.\"",
+   "\"예약은 잘 된 것 같은데, 혹시 일정이 변경되거나 예약에 문제가 생기면 바로 알려주겠지?\"",
+   "\"이번 여행은 계획대로 잘 다녀왔네. 다음에도 이 앱으로 코스를 추천받고 예약하면 편하겠다.\""
+  ]
+ },
+ "굿즈팀": {
+  "p_name": "김서연(22세). 좋아하는 캐릭터와 작품을 바탕으로 자신만의 굿즈를 제작하고 싶은 대학생.",
+  "p_sit": "원하는 디자인의 키링을 제작하고 싶지만, 제작 업체의 최소 주문 수량이 많고 혼자 모든 제작비를 부담하기 어려움.",
+  "p_goal": "원하는 디자인의 키링을 제작하고 싶지만, 제작 업체의 최소 주문 수량이 많고 혼자 모든 제작비를 부담하기 어려움.",
+  "p_crit": "제작 비용과 굿즈 품질. 특히 공동제작을 통해 비용을 얼마나 줄일 수 있는지 중요하게 생각함.",
+  "p_fear": "원하는 디자인의 키링을 제작하고 싶지만, 제작 업체의 최소 주문 수량이 많고 혼자 모든 제작비를 부담하기 어려움.",
+  "p_chan": "X(트위터), 인스타그램, 굿즈 제작 업체 홈페이지 등에서 굿즈 제작 사례와 공동구매 정보를 찾아봄.",
+  "p_limit": "대학생이므로 굿즈 제작에 사용할 수 있는 예산이 제한적임. 주로 스마트폰을 사용하며 복잡한 제작 절차보다 간편한 신청 방식을 선호함.",
+  "p_other": "본인이 펀딩 참여 비용을 지불함. 상대편은 굿즈 제작 업체와 공동제작에 참여하는 다른 창작자 및 구매자임.",
+  "lw_why": "굿즈 제작에 관심은 있지만 예상 제작비와 최소 참여 인원을 확인하면서 실제 펀딩이 성사될 수 있을지 불안감을 느낌. 특히 참여자가 충분히 모이지 않을 경우 제작이 무산될 가능성이 있으며, 공동제작 상대방의 신뢰성과 최종 제작 비용을 사전에 판단하기 어려움.\n근거: 11/4 BMC에서 공동제작 수요와 매칭 성사 가능성이 검증되지 않은 가설로 분류됨. 따라서 고객의 실제 감정 변화 역시 인터뷰를 통한 확인이 필요함.",
+  "lw_back": "시스템(규칙·저장): 사용자가 입력한 굿즈 종류, 희망 수량, 예상 제작비를 저장하고 최소 주문 수량 충족 여부와 예상 비용을 계산함.\nAI(이해·판단·작성): 등록된 아이디어의 유사성을 분석하여 공동제작이 가능한 창작자를 추천하고, 공동제작 초안과 견적 비교표를 생성함.\n사람(확인·승인·실행): 운영자는 부적절한 아이디어나 매칭 결과를 검토하고, 창작자는 AI의 추천과 견적을 확인한 뒤 공동제작 참여 여부를 최종 결정함.",
+  "as_q": "",
+  "ai_guess": "단계 이름과 순서 전체\n모든 접점(채널·화면). '정보 얻는 곳'이 비어 있어서 전부 추측입니다.\n모든 '속마음' 문장. 고객 말투는 제가 만들었고 실제 발화가 아닙니다.\n단계 1, 3, 4, 5의 감정 점수\n김서연이 키링을 제작해 본 적이 있는지, 업체에 실제로 문의했는지 (지금 하는 방법이 비어 있음)\n비슷한 아이디어를 가진 사람을 찾는 행동이 존재한다는 것\n타인과 돈·디자인을 합의하는 데 불안을 느낀다는 것\n키링 외 다른 품목이나 개인 소장 외 판매 목적이 있는지",
+  "fstage": "SNS에서 다른 창작자가 퍼니팅을 통해 굿즈 제작 참여자를 모집하는 게시물을 발견함.",
+  "fq": "",
+  "fp": "",
+  "quotes": []
+ },
+ "아진사랑정원은혜": {
+  "p_name": "",
+  "p_sit": "",
+  "p_goal": "",
+  "p_crit": "",
+  "p_fear": "",
+  "p_chan": "",
+  "p_limit": "",
+  "p_other": "",
+  "lw_why": "",
+  "lw_back": "",
+  "as_q": "",
+  "ai_guess": "",
+  "fstage": "",
+  "fq": "",
+  "fp": "",
+  "quotes": []
+ },
+ "5팀(won팀)": {
+  "p_name": "주형•22살•첫 차 4개월된 사회초년생",
+  "p_sit": "주형•차를 타고 집을 가던 중 갑자기 영문모를 계기판에 경고등이 떠서 처음 간 정비소에서 견적서를 받음",
+  "p_goal": "주형•지금 당장 필요한 정비만 하여 그 값을 알맞게 내고 싶음/지인이나 가족에게 사진을 보여주며 답을 기다림",
+  "p_crit": "주형•견적비,거리,신뢰",
+  "p_fear": "주형•돈을 알맞게 지불했는지 모르는 것",
+  "p_chan": "주형•블로그,지인문의",
+  "p_limit": "주형•시간 아까움,비용",
+  "p_other": "주형•정비소 사장님-손님이 자주 오지 않아 돈을 벌 기회가 적음",
+  "lw_why": "정비사가 지켜보는 카운터 앞에서 복잡한 정비 리포트를 읽고 대응해야 하는 상황이 주어져 심리적 압박감과 금전적 불안감이 극에 달하기 때문 [A: 가정·인터뷰 확인 필요]",
+  "lw_back": "AI: 명세서 OCR 판독 및 1분 요약 카드·질문 3개 생성 / 시스템: 표준 정비 수가 및 커뮤니티 데이터베이스 실시간 비교 조회 / 사람: 사용자가 카운터에서 리포트를 열람하고 최종 결제 여부 결정",
+  "as_q": "초보 운전자는 1분 안에 읽을 수 있는 요약 카드와 질문 3개가 제공되면, 카운터 앞에서도 앱을 켜서 이를 적극 활용할 것이다",
+  "ai_guess": "초보 운전자가 정비소 카운터 앞에서 실시간으로 앱을 켜서 견적서를 업로드하고 분석 결과를 대조할 것이라는 가정 (실제 현장의 압박 속에서 앱을 실행할 유저 행태나 기술적 지연 시간에 대한 검증이 없음)",
+  "fstage": "카운터에서 결제 결정",
+  "fq": "\"빨리 결제하고 나가야 하는데, 리포트에 나온 질문을 정비사한테 지금 다 물어봐야 되나...\"",
+  "fp": "정비사가 지켜보는 카운터 현장 압박 속에서 긴 진단 설명이나 리포트를 다 읽을 시간이 없음 [가정]",
+  "quotes": [
+   "면허딴 지 얼마 안 됐는데 카센터 아저씨가 부르는 게 값이라 너무 찜찜해... 누군가 내 명세서 좀 봐줬으면 좋겠네.",
+   "엔진오일 교체하는 데 이 가격이 맞는 건가? 검색해 봐도 다 제각각이라 감이 안 오네.",
+   "\"어려운 정비 용어 대신 내역을 풀어서 보여주니까 한눈에 들어오네\"",
+   "\"빨리 결제하고 나가야 하는데, 리포트에 나온 질문을 정비사한테 지금 다 물어봐야 되나...\"",
+   "\"지난번에 기록해 둔 덕분에 이번엔 바가지 걱정 없이 바로 맡기면 되겠네\""
+  ]
+ }
+};
+var TEAMS=[
+ {id:'1팀',mem:['이시우','김아현','이경빈'],tag:'자취 1인 가구 · 생활 일 대행',eb:'1팀',top:'왜 자취생 민서는 생활 일을 맡긴 뒤에도 불안해서 다시 맡기기를 망설일까?'},
+ {id:'WON',mem:['강은호','정지한','한서진'],tag:'초보 운전자 · 정비 견적',eb:'5팀(won팀)',top:'왜 초보 운전자 주형은 정비소 카운터 앞에서 견적이 맞는지 판단하지 못할까?'},
+ {id:'컨디션난조',mem:['신시아','김선유','박세빈','손채린','이지우'],tag:'반려동물 · 동물병원 진료비',eb:'컨디션난조',top:'왜 보호자 민지는 추천받은 동물병원도 믿지 못하고 여러 곳에 직접 물어볼까?'},
+ {id:'8팀',mem:['이재혁','김동건','김지성'],tag:'음식점 사장님 · 리뷰 답장',eb:'8팀',top:'왜 이 사장님의 리뷰 답장은 영업이 끝난 밤 12시 이후로 밀릴까?'},
+ {id:'한번해보조',mem:['장세빈','최호영','박제우'],tag:'덕질 · 굿즈 공동제작',eb:'굿즈팀',top:'왜 서연은 원하는 키링을 만들고 싶어도 제작을 시작하지 못할까?'},
+ {id:'킥오프',mem:['김동의','류정','유주혁','이지율','백승윤'],tag:'여행 · 데이트 일정',eb:'킥오프',top:'왜 민준은 여행 일정표가 있어도 예약과 영업시간을 하나씩 다시 확인할까?'},
+ {id:'7팀',mem:['김현수','권내현','곽태윤','이정희','박준석'],tag:'대학생 · 전공 교재 · 족보',eb:'',top:'왜 지수는 에브리타임에서 전공 교재를 1시간 넘게 찾다가 결국 포기할까?'},
+ {id:'병원 대기 팀',mem:['김아진','조은혜','장정원','정사랑'],tag:'병원 대기 · 기다림NO',eb:'',top:'왜 민지는 병원에 접수한 뒤 내 순서를 몰라 불안하게 기다릴까?'},
+ {id:'다른 팀',mem:[],tag:'목록에 우리 팀이 없을 때 (이름은 직접 고름)',eb:'',top:''}
+];
+/* e비즈 기록이 없는 팀: 주제로 만든 [추측] 출발 페르소나 */
+var EB_X={
+ '7팀':{src:'e비즈 고객 여정 지도 슬라이드(11/9)',p_name:'지수 · 성적 인증 기반 족보를 찾는 대학생',p_sit:'중간고사 시험 기간을 앞두고 전공 과목 기출문제를 찾고 있는 상황',p_goal:'확실하게 A+ 성적이 인증된 족보를 빠르게 구매 / 에브리타임, 카카오톡 오픈채팅방 검색',p_crit:'판매자의 성적이 진짜 A+인지 여부, 시험 직결성, 허위 매물 여부',p_fear:'돈을 입금했는데 허위 족보이거나 과목 내용이 전혀 다른 사기 피해를 당할까 봐 걱정',p_chan:'학교 커뮤니티 에브리타임, 학과 단톡방',p_limit:'학기 중 용돈 범위 내에서 합리적인 가격으로 구매해야 함',lw_why:'2단계 중고 교재 탐색 및 가격 비교(감정 -2): 1시간 이상 검색해도 판본이 맞지 않고, 선입금 사기 위험에 지쳐 탐색을 중단함 (팀 표기: I-02 인터뷰)',quotes:['"사기꾼일까 봐 찜찜한데 매물도 도저히 안 구해지네."','"전공책값이 벌써 15만 원이네... 이번 학기 진짜 부담된다."'],
+  chk:'페르소나는 "족보를 찾는 학생"인데 서비스 한 줄과 여정 지도는 "전공 교재 대여"입니다. 주인공이 찾는 것이 족보인가, 교재인가? 오늘 하나로 정하세요. (족보·필기 판매는 교수 강의자료 저작권·학칙 문제가 있습니다.)'},
+ '병원 대기 팀':{src:'e비즈 고객 여정 지도 슬라이드(11/9)',p_name:'민지 · 병원 진료를 위해 긴 대기시간을 보내는 20대 대학생',p_sit:'수업이 끝난 후 병원에 방문했지만 예상보다 대기 인원이 많아 오랜 시간 기다려야 하는 상황',p_goal:'실시간 대기 인원과 예상 대기시간을 확인하고, 진료 순서가 가까워지면 알림을 받고 싶음 / 접수 후 병원에서 직접 기다림',p_crit:'예상 대기시간의 정확성 · 실시간 정보 업데이트 · 알림의 편리성',p_fear:'예상 대기시간이 실제와 다르거나 알림이 늦게 와서 진료 순서를 놓치는 것',p_chan:'네이버 지도 · 병원 홈페이지 · 병원 앱 · 인터넷 검색',p_limit:'복잡한 사용 방법 · 개인정보 입력 부담',lw_why:'병원 접수 후 대기하는 순간(불안감 -2): 예상 대기시간이 길고 내 진료 순서를 알기 어려움',quotes:[],
+  chk:'페르소나는 "20대 대학생 민지"인데 서비스 한 줄과 AI 요약·확인할 가정은 "아동과 보호자(소아과)"입니다. 주인공은 누구인가? 중간 성찰 때 고객을 "아이·보호자"로 좁힌 결정을 다시 확인하세요.'}
+};
+var TEX={"1팀": {"top": "왜 자취생은 세탁물·택배를 찾으러 갈 시간을 내기 어려운가?", "basis": "사람 · 서비스 · 환경", "c": {"c1": ["사람 — 수업·알바로 낮 시간이 비지 않음", "G"], "c1a": ["평일 수업 시간이 세탁소 영업시간과 겹침", "G"], "c1b": ["저녁 알바가 끝나면 이미 문을 닫음", "G"], "c2": ["서비스 — 맡기고 찾는 곳이 정해진 시간에만 염", "G"], "c2a": ["세탁소가 저녁 일찍 닫음", "G"], "c2b": ["편의점 택배 보관 기간이 짧음", "G"], "c3": ["환경 — 원룸이라 대신 받아 줄 사람이 없음", "G"], "c3a": ["문 앞 택배는 분실이 걱정됨", "G"], "c3b": ["공용 세탁기라 시간을 맞추기 어려움", "G"]}, "ov": ["\"시간이 없음\"과 \"알바가 바쁨\"", "알바가 바쁜 것이 시간이 없는 이유 — 위아래 관계를 같은 줄에 둔 것"], "gap": "원인이 모두 \"사람\" 쪽 → 세탁소·택배 같은 \"서비스\" 쪽 원인이 통째로 없음", "bad": "세탁 대행 앱이 있으면 쓰실 건가요?", "good": "지난주에 세탁물이나 택배를 찾으러 갔던 때를 처음부터 이야기해 주세요.", "sv": "최근 한 달 동안 세탁물이나 택배를 제때 찾지 못한 적이 있나요?"}, "WON": {"top": "왜 초보 운전자는 정비 견적이 적정한지 판단하지 못하는가?", "basis": "고객 · 제공자 · 규칙", "c": {"c1": ["고객 — 부품·정비 용어를 모름", "G"], "c1a": ["견적서 부품 이름이 영어·약어로 적힘", "G"], "c1b": ["얼마가 정상 가격인지 기준이 없음", "G"], "c2": ["정비소 — 공임 기준이 곳마다 다름", "G"], "c2a": ["공임비가 견적서에 따로 안 적힘", "G"], "c2b": ["바로 결정하라고 재촉함", "G"], "c3": ["규칙 — 비교할 공개 가격표가 없음", "G"], "c3a": ["다른 정비소 견적을 받으려면 또 가야 함", "G"], "c3b": ["수리하고 나면 되돌릴 수 없음", "G"]}, "ov": ["\"용어를 모름\"과 \"견적서가 어려움\"", "견적서가 어려운 이유가 용어를 모르기 때문 — 같은 원인을 두 번 씀"], "gap": "원인이 모두 \"운전자\" 쪽 → 정비소·가격 공개 같은 \"제공자·규칙\" 쪽이 없음", "bad": "견적이 비싸서 불편하셨죠?", "good": "마지막으로 정비소에서 견적서를 받았을 때 어떻게 하셨어요?", "sv": "최근 1년 안에 정비소에서 견적을 받아 본 적이 있나요?"}, "컨디션난조": {"top": "왜 보호자는 동물병원 진료비를 미리 알기 어려운가?", "basis": "고객 · 제공자 · 규칙", "c": {"c1": ["보호자 — 어떤 진료가 필요한지 모름", "G"], "c1a": ["증상만 알고 검사 이름을 모름", "G"], "c1b": ["아플 때는 급해서 비교할 여유가 없음", "G"], "c2": ["병원 — 진료비를 미리 알리지 않음", "G"], "c2a": ["검사를 해 봐야 금액이 정해짐", "G"], "c2b": ["전화로 물으면 \"와 보셔야 안다\"", "G"], "c3": ["규칙 — 같은 진료도 병원마다 이름·가격이 다름", "G"], "c3a": ["진료비 게시 기준을 보호자가 모름 [확인 필요]", "G"], "c3b": ["블로그 후기 가격이 오래됨", "G"]}, "ov": ["\"진료비가 비쌈\"과 \"병원비 부담\"", "같은 말을 두 칸에 — 게다가 \"미리 알기 어려움\"의 원인이 아님"], "gap": "원인이 모두 \"보호자\" 쪽 → 병원이 정보를 어떻게 알리는지가 없음", "bad": "진료비 비교 앱이 필요하지 않으세요?", "good": "가장 최근에 강아지가 아파서 병원을 고를 때 무엇부터 하셨어요?", "sv": "최근 1년 안에 반려동물 진료비 때문에 병원을 고민한 적이 있나요?"}, "8팀": {"top": "왜 사장님은 리뷰 답장을 영업이 끝난 밤에 몰아서 쓰는가?", "basis": "사람 · 서비스 · 환경", "c": {"c1": ["사람 — 영업 중엔 손이 비지 않음", "G"], "c1a": ["혼자 여러 가게를 운영함", "G"], "c1b": ["답장 문장을 고민하는 데 오래 걸림", "G"], "c2": ["서비스 — 리뷰가 앱마다 흩어져 있음", "G"], "c2a": ["배달앱·지도 앱에 따로 들어가야 함", "G"], "c2b": ["급한 불만 리뷰를 따로 알려 주지 않음", "G"], "c3": ["환경 — 다른 사람에게 맡기기 어려움", "G"], "c3a": ["말투가 곧 가게 이미지라 아무나 못 씀", "G"], "c3b": ["리뷰 담당 직원을 둘 여유가 없음", "G"]}, "ov": ["\"바빠서\"와 \"시간이 없어서\"", "같은 말 — 무엇 때문에 바쁜지를 써야 함"], "gap": "원인이 모두 \"사장님\" 쪽 → 리뷰 앱 구조(서비스) 쪽이 없음", "bad": "AI가 답장을 써 주면 편하시겠죠?", "good": "어제 리뷰 답장을 언제, 어떻게 쓰셨는지 이야기해 주세요.", "sv": "최근 한 달 동안 리뷰 답장을 하루 넘게 미룬 적이 있나요? (사장님 대상)"}, "한번해보조": {"top": "왜 개인 창작자는 제작 업체의 최소 주문 수량을 채우지 못하는가?", "basis": "돈 · 시간 · 마음", "c": {"c1": ["돈 — 최소 수량만큼 혼자 제작비를 내야 함", "G"], "c1a": ["수량이 적으면 개당 단가가 크게 오름", "G"], "c1b": ["다 팔릴지 몰라 남는 재고가 부담", "G"], "c2": ["시간 — 함께 만들 사람을 찾기 오래 걸림", "G"], "c2a": ["같은 디자인을 원하는 사람이 흩어져 있음", "G"], "c2b": ["SNS 모집 글이 금방 묻힘", "G"], "c3": ["마음 — 모르는 사람과 돈 거래가 불안", "G"], "c3a": ["돈만 받고 연락이 끊길까 걱정", "G"], "c3b": ["디자인 의견이 갈릴까 걱정", "G"]}, "ov": ["\"제작비가 비쌈\"과 \"돈이 부족함\"", "같은 원인을 두 번 — 하나로 합치고 다른 기준의 원인을 찾기"], "gap": "원인이 모두 \"돈\" 쪽 → 사람 찾기(시간)·신뢰(마음)가 없음", "bad": "공동제작 플랫폼이 있으면 참여하시겠어요?", "good": "마지막으로 굿즈를 만들어 보려다 그만둔 때를 이야기해 주세요.", "sv": "최근 1년 안에 직접 굿즈를 만들어 보려고 알아본 적이 있나요?"}, "킥오프": {"top": "왜 대학생은 여행·데이트 계획에 시간이 오래 걸리는가?", "basis": "이용 전 · 중 · 후", "c": {"c1": ["고를 때 — 정보가 앱마다 흩어져 있음", "G"], "c1a": ["맛집·관광지·교통을 각각 검색함", "G"], "c1b": ["후기가 광고인지 구별하기 어려움", "G"], "c2": ["예약할 때 — 예약을 하나씩 따로 해야 함", "G"], "c2a": ["가게마다 예약 방법이 다름", "G"], "c2b": ["인기 장소는 예약이 빨리 마감됨", "G"], "c3": ["떠나기 전 — 바뀐 정보를 다시 확인해야 함", "G"], "c3a": ["영업시간·휴무가 바뀌어 있음", "G"], "c3b": ["함께 가는 사람과 일정을 다시 맞춤", "G"]}, "ov": ["\"검색이 오래 걸림\"과 \"앱을 여러 개 씀\"", "앱을 여러 개 쓰는 것이 검색이 오래 걸리는 이유 — 위아래 관계"], "gap": "\"고를 때\"만 있고 \"예약할 때·떠나기 전\"이 없음", "bad": "일정을 자동으로 짜 주면 좋겠죠?", "good": "지난번 여행이나 데이트 계획을 처음부터 어떻게 짜셨는지 이야기해 주세요.", "sv": "최근 3개월 안에 여행이나 데이트 일정을 직접 짠 적이 있나요?"}, "7팀": {"top": "왜 대학생은 개강 초 전공 교재를 제때 구하지 못하는가?", "basis": "돈 · 시간 · 마음", "c": {"c1": ["돈 — 새 책을 사기엔 교재비가 부담", "G"], "c1a": ["한 학기 교재비가 15만 원 가까이 됨", "G"], "c1b": ["한 학기만 쓰는 책인데 정가", "G"], "c2": ["시간 — 맞는 판본을 찾기 오래 걸림", "G"], "c2a": ["중고 글에 판본 정보가 없음", "G"], "c2b": ["개강 직후 매물이 금방 사라짐", "G"], "c3": ["마음 — 중고 거래가 불안", "G"], "c3a": ["선입금을 요구받음", "G"], "c3b": ["책 상태를 미리 볼 수 없음", "G"]}, "ov": ["\"교재가 비쌈\"과 \"용돈이 부족함\"", "둘 다 \"돈\" — 한 칸으로 합치기"], "gap": "원인이 모두 \"돈\" 쪽 → 판본 찾기(시간)·사기 걱정(마음)이 없음", "bad": "교재 대여 서비스를 이용하실 건가요?", "good": "이번 학기 개강 때 전공 교재를 어떻게 구하셨는지 처음부터 이야기해 주세요.", "sv": "이번 학기에 전공 교재를 직접 구한 적이 있나요?"}, "병원 대기 팀": {"top": "왜 보호자는 접수한 뒤에도 내 순서를 알기 어려운가?", "basis": "사람 · 서비스 · 환경", "c": {"c1": ["보호자 — 아이를 돌보느라 안내를 놓침", "G"], "c1a": ["아이를 달래느라 화면을 계속 못 봄", "G"], "c1b": ["대기 인원만 보고 시간을 짐작하지 못함", "G"], "c2": ["병원 — 순서가 진료 상황에 따라 바뀜", "G"], "c2a": ["진료 시간이 환자마다 다름", "G"], "c2b": ["예약 환자가 중간에 먼저 들어감", "G"], "c3": ["환경 — 순서를 알려 주는 수단이 없음", "G"], "c3a": ["대기실에 순서 화면이 없음", "G"], "c3b": ["접수 직원이 바빠 물어보기 어려움", "G"]}, "ov": ["\"기다림이 김\"과 \"대기 인원이 많음\"", "둘 다 증상 — \"왜 순서를 모르는가\"의 원인이 아님"], "gap": "원인이 모두 \"보호자\" 쪽 → 병원의 진료 순서 방식(서비스)이 없음", "bad": "번호표 알림이 오면 편리하시겠죠?", "good": "가장 최근에 아이와 병원에서 기다렸던 때를 처음부터 이야기해 주세요.", "sv": "최근 6개월 안에 병원 진료로 30분 넘게 기다린 적이 있나요?"}};
+var WHY={"1팀": ["왜 자취생은 세탁물·택배를 찾으러 갈 시간을 내기 어려운가?", "왜 자취생은 생활 심부름을 남에게 맡기기를 망설이는가?", "왜 자취생은 일을 맡긴 뒤 진행 상황을 몰라 불안한가?"], "WON": ["왜 초보 운전자는 정비 견적이 적정한지 판단하지 못하는가?", "왜 초보 운전자는 정비소 카운터 앞에서 묻지 못하고 그냥 결제하는가?", "왜 초보 운전자는 견적서 사진을 지인에게 보내 물어보는가?"], "컨디션난조": ["왜 보호자는 동물병원 진료비를 미리 알기 어려운가?", "왜 보호자는 추천받은 병원도 믿지 못하는가?", "왜 보호자는 여러 병원에 직접 전화해 물어보는가?"], "8팀": ["왜 사장님은 리뷰 답장을 영업이 끝난 밤에 몰아서 쓰는가?", "왜 사장님은 불만 리뷰에 답하기를 미루는가?", "왜 사장님은 AI가 쓴 답장을 그대로 올리지 못하는가?"], "한번해보조": ["왜 팬은 원하는 굿즈를 직접 만들기 어려운가?", "왜 개인 창작자는 제작 업체의 최소 주문 수량을 채우지 못하는가?", "왜 팬은 모르는 사람과 함께 제작비를 내기를 망설이는가?"], "킥오프": ["왜 대학생은 여행·데이트 계획에 시간이 오래 걸리는가?", "왜 대학생은 일정표가 있어도 예약·영업시간을 다시 확인하는가?", "왜 계획한 일정이 현장에서 자주 틀어지는가?"], "7팀": ["왜 대학생은 개강 초 전공 교재를 제때 구하지 못하는가?", "왜 대학생은 맞는 판본을 찾는 데 1시간 넘게 걸리는가?", "왜 대학생은 중고 교재 거래에서 사기를 걱정하는가?"], "병원 대기 팀": ["왜 보호자는 아픈 아이와 병원에서 오래 기다리는가?", "왜 접수한 뒤에도 내 순서를 알기 어려운가?", "왜 보호자는 대기 시간을 미리 알고 출발하지 못하는가?"]};
+function teamOf(t){return TEAMS.filter(function(x){return x.id===t;})[0]||{mem:[],tag:''};}
+function ebOf(t){var T=teamOf(t);return (T.eb&&EB[T.eb]&&EB[T.eb].p_name)?EB[T.eb]:(EB_X[t]||null);}
+var EBH={'1팀':'1팀','WON':'5팀(won팀)','컨디션난조':'컨디션난조','8팀':'8팀','한번해보조':'굿즈팀','킥오프':'킥오프','7팀':'7팀','병원 대기 팀':'아진사랑정원은혜'};
+var EBHD=null;
+function loadEbh(t){var id=EBH[t];EBHD=null;renderEbh();if(!id)return;fetch('https://script.google.com/macros/s/AKfycbxtSZUz1V81-N0-DUjKk-FQL-R1aNBBAmVTucZLfWcVSUcVA4nfDKG91nat5GczAZki/exec?key=capec-2026-2&op=pull&since=0&team='+encodeURIComponent('eux11:'+id)+'&t='+Date.now()).then(function(r){return r.json();}).then(function(j){if(t!==team||!j||!j.ok)return;var f=j.f||{},o={};Object.keys(f).forEach(function(k){if(k.indexOf('f:')===0)o[k.slice(2)]=f[k];});EBHD=o;renderEbh();}).catch(function(){});}
+function renderEbh(){var bx=$('ebhBox');if(!bx)return;var o=EBHD;if(!o||!(o.sc_why||o.sc_who||o.fn_prob)){bx.innerHTML='<p class="note">오전 e비즈 워크시트(핵심 장면·깔때기) 기록을 아직 못 찾았습니다'+(EBH[team]?'':' (e비즈 팀과 연결 안 됨)')+'. 오전에 쓴 "멈춘 이유"를 팀원에게 물어 아래에 적으세요. 오전에 쓰고 있는 중이면 「다시 불러오기」.</p>';return;}
+ var L=['거의 안 줄어듦','조금 줄어듦','많이 줄어듦'],mx=-1,mi=-1;[0,1,2,3].forEach(function(i){var v=parseInt(o['fn'+i],10);if(!isNaN(v)&&v>mx){mx=v;mi=i;}});
+ var row=function(l,v){v=String(v||'').trim();return v?'<tr><td>'+l+'</td><td>'+esc(v)+'</td></tr>':'';};
+ bx.innerHTML='<table class="ebht">'+row('고객 (핵심 장면)',o.sc_who)+row('언제·어디서',o.sc_where)+row('속마음',o.sc_say)+row('멈춘 이유',o.sc_why)+(mi>=0?'<tr><td>깔때기 — 가장 많이 빠지는 곳</td><td><b>'+(mi+1)+'→'+(mi+2)+'단계 · '+L[mx]+'</b>'+(o['fw'+mi]?'<br>누가: '+esc(o['fw'+mi]):'')+(o['fr'+mi]?'<br>왜: '+esc(o['fr'+mi]):'')+'</td></tr>':'')+row('그래서 고칠 문제',o.fn_prob)+row('MVP 가설',o.mv_hyp)+'</table><div class="ebhn"><b>오전의 "누가·왜 빠지나"는 아직 가정입니다.</b> 오늘 로직트리 → 인터뷰 → 설문으로 <b>그 이유가 진짜인지</b> 확인합니다. 확인한 결과는 다음 시간 e비즈 MVP와 보고서에 그대로 씁니다.</div><div class="row"><button type="button" class="btn gold sm" id="ebhUse">"멈춘 이유"를 아래 칸에 넣기</button><span class="note" id="ebhMsg"></span></div>';}
+var CAUSES=['c1','c1a','c1b','c2','c2a','c2b','c3','c3a','c3b'];
+function cLabel(id){var m=/^c(\d)([ab])?$/.exec(id);return m[2]?('하위 원인 '+m[1]+'-'+(m[2]==='a'?1:2)):('큰 원인 '+m[1]);}
+function bParts(){var b=F('lt_basis')==='직접 정함'?F('lt_basis_x'):F('lt_basis');if(b==='이용 전 · 중 · 후')return ['이용 전','이용 중','이용 후'];var p=String(b||'').split(/[·,/]/).map(function(x){return x.trim();}).filter(Boolean);return p.length===3?p:['기준 1','기준 2','기준 3'];}
+function cText(id){return F(id).trim();}
+var EVN={I:'인터뷰',D:'자료',G:'추측'};
+var BASIS=['사람 · 서비스 · 환경','이용 전 · 중 · 후','고객 · 제공자 · 규칙','돈 · 시간 · 마음','직접 정함'];
+function basis(){var b=F('lt_basis');return b==='직접 정함'?(F('lt_basis_x')||'직접 정함'):b;}
+function myIdx(){var v=($('roleSel')&&$('roleSel').value)||'';var m=teamOf(team).mem.indexOf(v);return m>=0?String(m):(v?'x':'');}
+var IVP={'1팀':'병원 대기 팀','병원 대기 팀':'1팀','8팀':'킥오프','킥오프':'8팀','WON':'컨디션난조','컨디션난조':'WON','한번해보조':'7팀','7팀':'한번해보조'};
+function renderIvp(){var el=$('ivPair');if(!el||!team)return;var p=IVP[team];if(!p){el.innerHTML='<p class="note">짝팀이 정해지지 않은 팀입니다. 옆 팀과 바꿔서 인터뷰하세요.</p>';return;}var T=teamOf(team),P=teamOf(p),h=Math.ceil(T.mem.length/2);el.innerHTML='<div class="ivp"><div><span class="tgA">우리 팀</span> '+esc(T.mem.join(' · '))+'</div><div class="ivx">⇄</div><div><span class="tgB">짝팀 ('+esc(p)+')</span> '+esc(P.mem.join(' · '))+'<br><span class="note">'+esc(P.tag)+'</span></div></div><div class="ivr"><b>진행 (10분씩 두 번)</b><ol><li><b>1회차</b> — 질문·기록: 우리 팀 <b>'+esc(T.mem.slice(0,h).join('·'))+'</b> → 대답: 짝팀 학생 1명 / 동시에 짝팀이 우리 팀 <b>'+esc(T.mem.slice(h).join('·')||T.mem[0])+'</b> 중 1명에게 질문</li><li><b>2회차</b> — 대답하는 사람을 바꿔서 한 번 더 → 우리 팀 인터뷰 기록 2개</li></ol><span class="note">짝팀이 결석했거나 늦으면 옆 팀과 바꿔도 됩니다. 오전 e비즈 교차 테스트와 같은 짝팀입니다.</span></div>';}
+function ivSlots(){var T=teamOf(team),a=[['iv1','짝팀 인터뷰 1'],['iv2','짝팀 인터뷰 2']];(T.mem.length?T.mem:['팀원1','팀원2','팀원3']).forEach(function(n,i){a.push(['ivh'+i,'과제 · '+n]);});return a;}
+var SYM=/불편|어렵|힘들|귀찮|번거롭|짜증|싫/,SOL=/앱(을|이)? ?(만들|개발|출시)|어플(을)? ?만들|플랫폼(을|이)? ?(만들|필요|없)|AI(가|로|를)? ?(추천|분석|해결|만들)|인공지능|시스템이 없|서비스가 없|기능이 없|기능(을|이)? ?(추가|필요)/;
+var LEAD=[[/(죠|지요|잖아요)\s*\??$/,'답을 넣어 묻는 질문 — "그때 어땠어요?"처럼 열어 두세요'],[/(쓰실|사용하실|이용하실|하실 건가요|할 건가요|하시겠어요|있다면|있으면 좋|만약)/,'미래·가정 질문 — "마지막으로 ○○했을 때"처럼 지난 경험을 물으세요'],[/(나요|까요|습니까|었어요|았어요|있어요|없어요)\s*\??$/,'예/아니오로 끝날 수 있는 질문 — "어떻게", "무엇이"로 바꿔 보세요'],[/(불편|힘들|어렵|비싸|좋)[^ ]*\s*(하|했|하셨|셨|았|었|지)/,'느낌을 정해 주는 말이 들어 있어요 — 느낌은 상대가 말하게 두세요']];
+function lintQ(q){q=String(q||'').trim();if(!q)return '';var r=[];LEAD.forEach(function(x){if(x[0].test(q))r.push(x[1]);});return r[0]||'';}
+var PN=[['pn_name','이름(가명) · 나이 · 한 줄 소개','예: 민서(가명) · 20세 · 대학가 원룸 자취 1년차, 평일 저녁 편의점 아르바이트','p_name'],
+ ['pn_scene','하루 중 한 장면 (문제가 생기는 순간)','언제, 어디서, 무엇을 하다가 막히는지 영화 장면처럼','p_sit'],
+ ['pn_goal','이루고 싶은 것','이 사람이 진짜 원하는 결과 (우리 서비스 이름 X)','p_goal'],
+ ['pn_now','지금은 어떻게 해결하나','앱·사람·발품 등 지금 쓰는 방법과 그 방법의 한계',''],
+ ['pn_pain','가장 큰 불편 (로직트리 원인과 연결)','"○○ 때문에 ○○를 못 한다" — 증상이 아니라 원인으로','lw_why'],
+ ['pn_fear','걱정하는 것','돈·시간·신뢰·창피함 중 무엇이 두려운가','p_fear'],
+ ['pn_quote','실제로 한 말 (인터뷰 인용)','따옴표 그대로 1~2개. 지어낸 말이면 근거를 "추측"으로',''],
+ ['pn_crit','고를 때 따지는 것','가격·시간·후기·거리 등 우선순위대로','p_crit'],
+ ['pn_chan','정보를 얻는 곳','실제로 이름이 나온 앱·커뮤니티·사람','p_chan'],
+ ['pn_limit','제약','돈·시간·기기·지식 중 이 사람을 막는 것','p_limit']];
+var SVT=[['one','객관식 (하나만)'],['multi','체크박스 (여러 개)'],['scale','척도 1~5'],['text','짧은 답']];
+var SVH=['대상 거르기 — 최근 경험이 있는지 (예/아니오)','확인할 원인이 실제로 일어나는지','얼마나 자주·얼마나 큰 문제인지 (척도)','지금은 어떻게 해결하는지 (보기 + 기타)','가장 기억에 남는 순간 (짧은 답)'];
+function lintSv(q){q=String(q||'').trim();if(!q)return '';if(/(와|과|및|그리고|이나)\s/.test(q)&&/(만족|불편|좋|어떻|어땠)/.test(q))return '두 가지를 한 번에 묻는지 보세요 — 한 질문에 하나만';var l=lintQ(q);if(l&&!/예\/아니오/.test(l))return l;if(/(이름|학번|연락처|전화|이메일)/.test(q))return '개인정보는 묻지 않습니다';return '';}
+function svText(){var o=[];o.push('[설문 제목] '+(F('sv_who')?F('sv_who')+' 대상 ':'')+'짧은 설문 (1분)');o.push('[설명] '+(F('tname')||'')+' 팀 수업 과제입니다. 이름·연락처는 묻지 않으며, 답변은 수업 프로젝트에만 씁니다.');
+ [1,2,3,4,5].forEach(function(n){var q=F('sv_q'+n).trim();if(!q)return;var t=F('sv_t'+n)||'one',tl=(SVT.filter(function(x){return x[0]===t;})[0]||['',''])[1];o.push('');o.push(n+'. '+q+'  ('+tl+')');if(t==='one'||t==='multi'){F('sv_o'+n).split(/\n|\/|,/).map(function(s){return s.trim();}).filter(Boolean).forEach(function(s){o.push('   ○ '+s);});}if(t==='scale')o.push('   1 전혀 아니다 — 5 매우 그렇다');});
+ return o.join('\n');}
+var QZ=[{q:'"불편해서"를 원인 칸에 썼다. 무엇이 문제일까?',o:['원인이 너무 구체적이다','증상이다 — "왜 불편한가?"를 한 번 더 물어야 한다','근거가 인터뷰라서 안 된다'],a:1,e:'"불편하다"는 증상입니다. 무엇 때문에 불편한지가 원인입니다.'},
+ {q:'원인 3개가 "가격이 비쌈 / 돈이 아까움 / 앱 사용이 어려움"이다. MECE 관점에서 문제는?',o:['겹침 — 앞의 두 개가 사실상 같은 말','빠짐 — 원인이 3개뿐','문제없음'],a:0,e:'두 칸을 바꿔 넣어도 말이 되면 겹친 것입니다. 하나로 합치고 빈 자리에 다른 기준의 원인을 찾으세요.'},
+ {q:'로직트리에서 "추측" 표시가 많이 나왔다. 어떻게 할까?',o:['추측 칸은 지운다','추측 중 중요한 것을 인터뷰로 확인한다','AI에게 물어 근거로 바꾼다'],a:1,e:'추측은 "확인할 목록"입니다. AI 답은 근거가 아니라 또 하나의 추측입니다.'}];
+var QQ=[{a:'이 서비스가 있으면 쓰실 건가요?',b:'마지막으로 ○○을 했을 때 어떻게 하셨어요?',r:1,e:'미래 질문에는 누구나 "네"라고 합니다. 지난 행동이 진짜입니다.'},
+ {a:'그때 무엇이 제일 신경 쓰였어요?',b:'가격이 비싸서 불편하셨죠?',r:0,e:'"비싸서 불편"이라는 답을 넣어 묻으면 그 답만 돌아옵니다.'},
+ {a:'불편했던 적 있으세요?',b:'가장 최근에 곤란했던 순간을 이야기해 주세요.',r:1,e:'예/아니오 질문은 대화가 끝납니다. 장면을 이야기하게 하세요.'},
+ {a:'그건 왜요? 그때 어떻게 하셨어요?',b:'아 네, 다음 질문 할게요.',r:0,e:'답이 나오면 한 번 더 파고드는 것이 인터뷰의 핵심입니다.'}];
+var EXT={top:'왜 60대 이상 손님은 패스트푸드점 키오스크 주문을 포기할까?',basis:'사람 · 서비스 · 환경',c:{c1:['사람 쪽 — 메뉴 용어·순서가 낯섦','I'],c1a:['"세트·단품" 같은 말이 무슨 뜻인지 모름','I'],c1b:['뒤에 줄이 서면 조급해져 손이 떨림','I'],c2:['서비스 쪽 — 화면이 따라가기 어려움','D'],c2a:['단계가 7번, 되돌아가기 버튼이 작음','D'],c2b:['글자가 작고 버튼이 빽빽함','G'],c3:['환경 쪽 — 도와줄 사람이 없음','G'],c3a:['직원이 모두 주방에 있음','G'],c3b:['미리 연습해 볼 기회가 없음','G']},v:{c1b:'O',c3a:'?'}};
+function treeHTML(d){var c=d.c,v=d.v||{},bl=String(d.basis||'').split('·').map(function(x){return x.trim();}).filter(Boolean),COL=['t','p','o'];
+ function split(t,n){t=String(t||'');var m=t.split(/\s+—\s+/);return m.length>1?[m[0],m.slice(1).join(' — ')]:[(bl.length===3?bl[n]:'갈래 '+(n+1)),t];}
+ function ev(id){var x=c[id]||[];return x[1]?' <span class="ev '+x[1]+'">'+EVN[x[1]]+'</span>':(x[0]?' <span class="ev N">근거?</span>':'');}
+ function vr(id){var r=v[id];return r?'<i class="vr">'+(r==='O'?'✓ 맞음':r==='X'?'✗ 틀림':'? 모름')+'</i>':'';}
+ function leaf(id){var x=c[id]||[];var r=v[id];return '<div class="lf'+(x[0]?'':' empty')+(r==='O'?' ok':r==='X'?' no':'')+'">'+vr(id)+(x[0]?esc(x[0]):cLabel(id))+ev(id)+'</div>';}
+ var h='<div class="lt2"><div class="lth"><span><b>1</b> 핵심 질문</span><span><b>2</b> 큰 갈래 <small>어디에서 막히나?</small></span><span><b>3</b> 구체적인 원인 후보 <small>왜 그럴 수 있나?</small></span></div><div class="ltb"><div class="lq">'+(d.basis?'<small>기준 · '+esc(d.basis)+'</small>':'')+esc(d.top||'(핵심 질문)')+'</div><div class="lbrs">';
+ [1,2,3].forEach(function(n,i){var id='c'+n,x=c[id]||[],sp=split(x[0],i),r=v[id];h+='<div class="lbr '+COL[i]+'"><div class="lbx'+(x[0]?'':' empty')+(r==='O'?' ok':r==='X'?' no':'')+'">'+vr(id)+'<small>'+esc(sp[0])+'</small>'+(x[0]?esc(sp[1]):'원인 '+n)+ev(id)+'</div><div class="llv">'+leaf(id+'a')+leaf(id+'b')+'</div></div>';});
+ return h+'</div></div></div>';}
+function ourTree(){var c={};CAUSES.forEach(function(id){c[id]=[cText(id),F('e_'+id)];});var v={};CAUSES.forEach(function(id){var r=F('vr_'+id);if(r)v[id]=r;});return treeHTML({top:F('lt_top'),basis:basis(),c:c,v:v});}
+function picked(){return CAUSES.filter(function(id){return S&&S.chk['v_'+id]&&cText(id);});}
+function setSel(sel,opts,val){if(!sel)return;var sig=opts.map(function(o){return o[0]+'='+o[1];}).join('|');if(sel.dataset.sig!==sig){sel.innerHTML=opts.map(function(o){return '<option value="'+esc(o[0])+'">'+esc(o[1])+'</option>';}).join('');sel.dataset.sig=sig;}if(document.activeElement!==sel)sel.value=val;}
+function causeOpts(extra){var a=[['','— 고르기 —']];CAUSES.forEach(function(id){if(cText(id))a.push([id,cLabel(id)+': '+cText(id).slice(0,28)]);});return a.concat(extra||[]);}
+function setHidden(k,v){var el=document.querySelector('input[type=hidden][data-f="'+k+'"]');if(!el)return;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));}
+function stamp(k){return F(k)?' <span class="note">✓ '+esc(F(k))+'</span>':'';}
+
+var CFG={key:'pdt-w11-',file:'pdt-w11',teams:TEAMS,
+ label:function(){return (F('tname')||team);},
+ init:function(){
+  $('teams').innerHTML=TEAMS.map(function(t){return '<button type="button" class="tcard" data-t="'+esc(t.id)+'"><b>'+esc(t.mem.length?t.mem.join(' · '):t.id)+'</b><span>'+esc(t.tag)+'</span></button>';}).join('');
+  $('teams').addEventListener('click',function(e){var b=e.target.closest('.tcard');if(b)pick(b.dataset.t);});
+  $('roleSel').addEventListener('change',function(){lsSet(KEY+'me-'+team,this.value);renderPersonal();rerender();});
+  $('exTree').innerHTML=treeHTML(EXT);
+  $('whyAll').innerHTML=TEAMS.filter(function(t){return WHY[t.id];}).map(function(t){return '<div class="wy" data-wt="'+esc(t.id)+'"><b>'+esc(t.mem.join(' · '))+' <span>'+esc(t.tag)+'</span></b><ul>'+WHY[t.id].map(function(q){return '<li>'+esc(q)+'</li>';}).join('')+'</ul></div>';}).join('');
+  $('basisBtns').innerHTML=BASIS.map(function(b){return '<button type="button" class="chip" data-set="lt_basis" data-v="'+esc(b)+'">'+esc(b)+'</button>';}).join('')+'<input type="hidden" data-f="lt_basis">';
+  var h='';[1,2,3].forEach(function(n){h+='<div class="cgrp"><div class="cmain">'+cin('c'+n,'큰 원인 '+n,'[기준 칸] — 고객이 겪는 어려움')+'</div><div class="csub">'+cin('c'+n+'a','하위 원인 '+n+'-1','왜? 더 구체적으로 — 실제 장면·행동')+cin('c'+n+'b','하위 원인 '+n+'-2','왜? 더 구체적으로 — 실제 장면·행동')+'</div></div>';});$('causeIn').innerHTML=h;
+  function cin(id,lab,ph){return '<div class="cin"><label id="lb_'+id+'">'+lab+'</label><input type="text" data-f="'+id+'" placeholder="'+ph+'"><div class="cex" id="cx_'+id+'"></div><div class="evb">'+['I','D','G'].map(function(k){return '<button type="button" class="ev '+k+'" data-set="e_'+id+'" data-v="'+k+'">'+EVN[k]+'</button>';}).join('')+'<input type="hidden" data-f="e_'+id+'"></div><div class="lint" id="l_'+id+'"></div></div>';}
+  $('pickV').innerHTML=CAUSES.map(function(id){return '<label class="pk" id="pk_'+id+'"><input type="checkbox" data-ck="v_'+id+'"> <span></span></label>';}).join('');
+  $('quiz').innerHTML=QZ.map(function(x,i){return '<div class="qz" data-q="'+i+'"><b>Q'+(i+1)+'. '+esc(x.q)+'</b>'+x.o.map(function(o,j){return '<button type="button" class="qo" data-qa="'+i+'" data-qo="'+j+'">'+esc(o)+'</button>';}).join('')+'<div class="qe" id="qe'+i+'"></div></div>';}).join('');
+  $('qquiz').innerHTML=QQ.map(function(x,i){return '<div class="qz"><b>'+(i+1)+'. 어느 쪽이 좋은 질문일까?</b><button type="button" class="qo" data-qq="'+i+'" data-qo="0">'+esc(x.a)+'</button><button type="button" class="qo" data-qq="'+i+'" data-qo="1">'+esc(x.b)+'</button><div class="qe" id="qq'+i+'"></div></div>';}).join('');
+  $('qIn').innerHTML=[1,2,3].map(function(n){return '<div class="qrow"><div class="fld"><label>확인할 원인</label><select data-f="qc'+n+'" id="qc'+n+'"></select></div><div class="fld"><label>질문 '+n+'</label><input type="text" data-f="q'+n+'" placeholder="마지막으로 ○○했을 때 …"><div class="lint" id="ql'+n+'"></div></div></div>';}).join('')+'<div class="row"><button type="button" class="btn ghost" id="qTpl">빈 질문에 시작 문장 넣기</button><span class="note">원인을 고른 빈 질문에 시작 문장을 넣습니다. ○○를 페르소나의 행동으로 바꾸세요. <b>원인 말을 질문에 넣으면 유도 질문</b>이 됩니다.</span></div>';
+  $('svIn').innerHTML=[1,2,3,4,5].map(function(n){return '<div class="svrow"><div class="fld"><label>문항 '+n+' <span class="note">'+SVH[n-1]+'</span></label><input type="text" data-f="sv_q'+n+'"><div class="lint" id="svl'+n+'"></div></div><div class="fld"><label>유형</label><select data-f="sv_t'+n+'">'+SVT.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>';}).join('')+'</select></div><div class="fld svo" id="svo'+n+'"><label>보기 (줄마다 하나, 마지막은 기타)</label><textarea rows="3" data-f="sv_o'+n+'"></textarea></div></div>';}).join('');
+  $('pnIn').innerHTML=PN.map(function(p){return '<div class="pnrow"><div class="fld"><label>'+p[1]+'</label><div class="hint">'+p[2]+'</div>'+(p[0]==='pn_scene'||p[0]==='pn_pain'||p[0]==='pn_quote'||p[0]==='pn_now'?'<textarea rows="2" data-f="'+p[0]+'"></textarea>':'<input type="text" data-f="'+p[0]+'">')+'<div class="lint" id="pl_'+p[0]+'"></div></div><div class="evb v">'+['I','D','G'].map(function(k){return '<button type="button" class="ev '+k+'" data-set="pe_'+p[0]+'" data-v="'+k+'">'+(k==='I'?'들은 말':EVN[k])+'</button>';}).join('')+'<input type="hidden" data-f="pe_'+p[0]+'"></div></div>';}).join('');
+  document.addEventListener('click',function(e){
+   var b=e.target.closest('[data-set]');if(b){if(!team)return;var k=b.dataset.set,v=b.dataset.v;if(F(k)===v&&k.indexOf('e_')!==0&&k.indexOf('pe_')!==0&&k.indexOf('vr_')!==0)return;setHidden(k,F(k)===v?'':v);return;}
+   var q=e.target.closest('[data-qa]');if(q){var i=+q.dataset.qa,j=+q.dataset.qo,x=QZ[i];q.parentNode.querySelectorAll('.qo').forEach(function(o){o.classList.remove('r','w');});q.classList.add(j===x.a?'r':'w');$('qe'+i).innerHTML=(j===x.a?'<b class="okc">맞아요.</b> ':'<b class="wc">다시 보세요.</b> ')+esc(x.e);return;}
+   var qq=e.target.closest('[data-qq]');if(qq){var i2=+qq.dataset.qq,j2=+qq.dataset.qo,y=QQ[i2];qq.parentNode.querySelectorAll('.qo').forEach(function(o){o.classList.remove('r','w');});qq.classList.add(j2===y.r?'r':'w');$('qq'+i2).innerHTML=(j2===y.r?'<b class="okc">좋은 질문!</b> ':'<b class="wc">아쉬워요.</b> ')+esc(y.e);return;}
+   if(e.target.id==='qTpl'){if(!team)return;var n0=0;[1,2,3].forEach(function(n){var c=F('qc'+n);if(c&&!F('q'+n).trim()){var p=teamOf(team);S.f['q'+n]='가장 최근에 ○○했던 때를 처음부터 이야기해 주세요. 그중 가장 곤란했던 순간은 언제였고, 그때 어떻게 하셨어요?';if(window.SY)SY.edit('f:q'+n);n0++;}});if(n0){save();bindFields();rerender();}return;}
+   var wb=e.target.closest('[data-why]');if(wb){if(!team)return;var q0=(WHY[team]||[])[+wb.dataset.why];if(!q0)return;if(has('lt_top')&&wb.dataset.arm!=='1'){wb.dataset.arm='1';wb.textContent='바꿀까요? 한 번 더';return;}snapshot(true);S.f.lt_top=q0;if(window.SY)SY.edit('f:lt_top');save();bindFields();rerender();wb.textContent='✓ 넣음';return;}
+   var cx0=e.target.closest&&e.target.closest('[data-cex]');if(cx0){if(!team)return;var id0=cx0.dataset.cex,X0=TEX[team];if(!X0||!X0.c[id0])return;if(has(id0)&&cx0.dataset.arm!=='1'){cx0.dataset.arm='1';cx0.textContent='바꿀까요? 한 번 더';return;}S.f[id0]=X0.c[id0][0];if(window.SY)SY.edit('f:'+id0);save();bindFields();rerender();cx0.textContent='✓ 넣음';return;}
+   if(e.target.closest&&e.target.closest('#ebhRe')){loadEbh(team);return;}if(e.target.id==='ebhUse'&&EBHD){var v0=String(EBHD.sc_why||EBHD.fn_prob||'');if(has('ebh_cause')&&e.target.dataset.arm!=='1'){e.target.dataset.arm='1';e.target.textContent='바꿀까요? 한 번 더';return;}S.f.ebh_cause=v0;if(window.SY)SY.edit('f:ebh_cause');save();bindFields();rerender();$('ebhMsg').textContent='✓ 넣었습니다 — 우리 말로 고쳐 쓰세요';return;}
+   if(e.target.id==='bigBtn'){document.body.classList.toggle('big');return;}
+  });
+ },
+ onPick:function(t){var T=teamOf(t),sel=$('roleSel');sel.innerHTML='<option value="">이름 고르기</option>'+T.mem.map(function(n){return '<option>'+esc(n)+'</option>';}).join('')+'<option value="__x">목록에 없음</option>';sel.value=lsGet(KEY+'me-'+t)||'';
+  var h='';ivSlots().forEach(function(s){var k=s[0];h+='<div class="iv" id="iv_'+k+'"><h4>'+esc(s[1])+'</h4><div class="grid2"><div class="fld"><label>누구 (특징만, 실명 X)</label><input type="text" data-f="'+k+'_who" placeholder="예: 경영학과 2학년, 자취 2년차"></div><div class="fld"><label>언제 · 어디서</label><input type="text" data-f="'+k+'_when" placeholder="예: 11/11 강의실 / 11/13 학생식당"></div></div><div class="fld"><label>들은 말 그대로 (3줄)</label><textarea rows="3" data-f="'+k+'_say" placeholder="&quot;…&quot;"></textarea></div><div class="grid2"><div class="fld"><label>놀란 점 1줄 (우리 짐작과 다른 것)</label><input type="text" data-f="'+k+'_wow"></div><div class="fld"><label>이 말은 어느 원인의 근거?</label><select data-f="'+k+'_link" class="ivlink"></select></div></div></div>';});$('ivIn').innerHTML=h;
+  var e=ebOf(t),bx=$('ebBox');
+  if(!e){bx.innerHTML='<p class="note">팀 목록에 없는 팀입니다. e비즈 고객 여정 지도에서 쓴 페르소나를 보며 5탭에서 직접 씁니다.</p>';}
+  else{bx.innerHTML='<div class="ebp"><div class="who">'+esc(e.p_name)+'</div><dl>'+[['상황',e.p_sit],['원하는 것 / 지금 방법',e.p_goal],['따지는 것',e.p_crit],['걱정',e.p_fear],['정보 얻는 곳',e.p_chan],['제약',e.p_limit]].filter(function(r){return r[1];}).map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>';}).join('')+'</dl>'+(e.lw_why?'<div class="drop"><b>여정 지도에서 감정이 떨어진 이유</b> '+esc(e.lw_why)+'</div>':'')+(e.chk?'<div class="warnbox"><b>오늘 먼저 정할 것</b> '+esc(e.chk)+'</div>':'')+'<p class="note">'+(e.src?'출처: '+esc(e.src)+' · ':'출처: e비즈 고객 여정 지도 워크시트(11/9) · ')+'<b>점검:</b> 이 중 실제 사람에게 들은 말은 몇 칸인가요?</p></div>';}
+  var X=TEX[t];if(X){$('exTitle').textContent='예시 — '+T.tag+' (우리 팀 주제)';$('exTree').innerHTML=treeHTML(X);$('exNote').innerHTML='나누는 기준 「'+esc(X.basis)+'」로 원인 3개 → 원인마다 "왜?"를 한 번 더. 근거는 모두 <span class="ev G">추측</span> — 맞는지는 인터뷰로 확인합니다. (예)는 그대로 옮기지 말고 우리 팀이 고르고 고칩니다.';
+   $('meceOv').innerHTML='<b>✗ 겹침</b>'+esc(X.ov[0])+' → '+esc(X.ov[1]);$('meceGap').innerHTML='<b>✗ 빠짐</b>'+esc(X.gap);
+   $('qEx').innerHTML='<b>우리 팀 주제로 보면</b><div class="grid2"><div class="mbox bad"><b>✗ 이렇게 묻지 않기</b>'+esc(X.bad)+'</div><div class="mbox good"><b>✓ 이렇게</b>'+esc(X.good)+'</div></div>';
+   $('svEx').innerHTML='<b>(예) 우리 팀 문항 1 — 대상 거르기</b> '+esc(X.sv);}
+  else{$('exTitle').textContent='예시 — 동네 패스트푸드점 키오스크';$('exTree').innerHTML=treeHTML(EXT);$('qEx').innerHTML='';$('svEx').innerHTML='';}
+  var wl=WHY[t]||[];$('topEx').innerHTML=wl.length?'<b>우리 팀 후보</b> 하나를 골라 넣고 우리 말로 고치세요.'+wl.map(function(q,i){return '<div class="wpick"><span>'+esc(q)+'</span><button type="button" class="btn ghost sm" data-why="'+i+'">넣기</button></div>';}).join('')+'<span class="note">e비즈 여정 지도에서 감정이 떨어진 곳: '+esc((ebOf(t)||{}).lw_why||'—').slice(0,90)+'</span>':'<b>(예) 키오스크</b> '+esc(EXT.top);
+  document.querySelectorAll('.wy').forEach(function(d){d.classList.toggle('me',d.dataset.wt===t);});
+  renderPersonal();loadEbh(t);},
+ render:function(){renderIvp();if(window.SY&&SY.ready()&&ebOf(team)&&window._pnAuto!==team&&['pn_name','pn_scene','pn_goal','pn_pain','pn_fear'].every(function(k){return !has(k);})){window._pnAuto=team;if(CFG.fill.eb()){save();bindFields();}}(function(){var a=$('svOpen');if(!a)return;var u=F('sv_url');if(/^https?:\/\//.test(u)){a.href=u;a.style.display='';}else a.style.display='none';})();var psv=$('pv_svai');if(psv&&psv.style.display==='block')psv.textContent=CFG.prompts.svai();var psu=$('pv_survey');if(psu&&psu.style.display==='block')psu.textContent=CFG.prompts.survey();
+  var T=teamOf(team);
+  $('probLint').textContent=SOL.test(F('prob'))?'해결책 말(앱·AI·플랫폼)이 들어 있어요. 문제만 남기세요.':'';
+  $('topLint').textContent=SOL.test(F('lt_top'))?'질문에 해결책이 들어 있어요.':(F('lt_top')&&!/^왜/.test(F('lt_top').trim())?'"왜"로 시작하면 원인 나무가 됩니다.':'');
+  document.querySelectorAll('[data-set]').forEach(function(b){b.classList.toggle('on',F(b.dataset.set)===b.dataset.v);});
+  $('basisX').style.display=F('lt_basis')==='직접 정함'?'block':'none';
+  (function(){var bp=bParts(),X=TEX[team];[1,2,3].forEach(function(n){var lb=$('lb_c'+n);if(lb)lb.innerHTML='큰 원인 '+n+' <span class="bpn">'+esc(bp[n-1])+'</span>';});
+   CAUSES.forEach(function(id){var cx=$('cx_'+id);if(!cx)return;var ex=X&&X.c&&X.c[id]?X.c[id][0]:'';cx.innerHTML=ex?'(예) '+esc(ex)+' <button type="button" class="btn ghost sm" data-cex="'+id+'">넣고 고치기</button>':'';});
+   var pv=$('pickV');if(pv){var any=CAUSES.some(function(id){return cText(id);});var nb=$('pickNone');if(!nb){pv.insertAdjacentHTML('afterbegin','<p class="note" id="pickNone"></p>');nb=$('pickNone');}nb.innerHTML=any?'위에서 쓴 원인이 <b>자동으로</b> 여기에 나옵니다. <b>근거가 "추측"인 것</b> 중에서 고르세요.':'위 「"왜?"를 두 번」 칸에 원인을 쓰면 <b>여기에 자동으로 나옵니다.</b>';}})();
+  CAUSES.forEach(function(id){var t=cText(id),l=$('l_'+id);if(l)l.textContent=SYM.test(t)?'증상 같아요 — "왜 '+t.replace(/\s+$/,'')+'?" 한 번 더':(SOL.test(t)?'해결책이 들어 있어요 — 원인으로':'');var pk=$('pk_'+id);if(pk){pk.style.display=t?'':'none';pk.querySelector('span').innerHTML='<b>'+cLabel(id)+'</b> '+esc(t)+' '+(F('e_'+id)?'<span class="ev '+F('e_'+id)+'">'+EVN[F('e_'+id)]+'</span>':'');}});
+  $('ourTree').innerHTML=cText('c1')||cText('c2')||cText('c3')?ourTree():'<p class="note">원인을 쓰면 그려집니다.</p>';
+  var w=[],tx=CAUSES.map(cText);if(['c1','c2','c3'].some(function(id){return SYM.test(cText(id));}))w.push('원인 칸에 증상 말(불편·어렵·귀찮)이 있습니다.');
+  var g=CAUSES.filter(function(id){return cText(id)&&F('e_'+id)==='G';}).length,nb=CAUSES.filter(function(id){return cText(id)&&!F('e_'+id);}).length;
+  if(nb)w.push('근거를 안 고른 칸이 '+nb+'개 있습니다.');
+  $('meceAuto').innerHTML=(w.length?'<div class="warnbox">'+w.join('<br>')+'</div>':'')+(g?'<div class="okbox">추측 '+g+'칸 = 오늘 확인할 후보입니다.</div>':'');
+  var vs=picked();if(vs.length>3)$('pickV').insertAdjacentHTML('beforeend','');
+  [1,2,3].forEach(function(n){setSel($('qc'+n),causeOpts(),F('qc'+n));$('ql'+n).textContent=lintQ(F('q'+n));});
+  document.querySelectorAll('.ivlink').forEach(function(s){setSel(s,causeOpts([['new','새로 알게 된 원인'],['no','우리 짐작과 반대']]),F(s.dataset.f));});
+  setSel($('svC'),causeOpts(),F('sv_c'));
+  [1,2,3,4,5].forEach(function(n){$('svl'+n).textContent=lintSv(F('sv_q'+n));var t=F('sv_t'+n)||'one';$('svo'+n).style.display=(t==='one'||t==='multi')?'':'none';});
+  PN.forEach(function(p){var l=$('pl_'+p[0]);if(!l)return;var v=F(p[0]);l.textContent=(p[0]==='pn_pain'&&SOL.test(v))?'해결책이 아니라 원인으로 써요.':(p[0]==='pn_quote'&&v&&!/["“”'‘’]/.test(v))?'따옴표 안에 들은 말 그대로 쓰세요.':(p[0]==='pn_quote'&&v&&F('pe_pn_quote')==='I'&&!hasIv()?'인터뷰 기록(4탭)이 아직 없어요. 근거를 확인하세요.':'');});
+  $('pnCard').innerHTML=pnCard();
+  var ck=pnChecks();$('pnChk').innerHTML='<div class="qgrid">'+ck.map(function(c){return '<div class="qi '+(c[0]?'ok':'ng')+'"><span class="qs">'+(c[0]?'✓':'!')+'</span><div><b>'+c[1]+'</b></div></div>';}).join('')+'</div>';
+  var vh='';vs.forEach(function(id){vh+='<div class="vrow"><div><b>'+cLabel(id)+'</b> '+esc(cText(id))+'</div><div class="evb">'+[['O','✓ 맞음'],['X','✗ 틀림'],['?','? 모름']].map(function(o){return '<button type="button" class="chip" data-set="vr_'+id+'" data-v="'+o[0]+'">'+o[1]+'</button>';}).join('')+'<input type="hidden" data-f="vr_'+id+'"></div></div>';});
+  var vk=vs.join(',');if($('verIn').dataset.k!==vk){$('verIn').innerHTML=vh||'<p class="note">3탭에서 확인할 원인을 고르면 나타납니다.</p>';$('verIn').dataset.k=vk;}
+  document.querySelectorAll('#verIn [data-set]').forEach(function(b){b.classList.toggle('on',F(b.dataset.set)===b.dataset.v);});
+  setSel($('coreSel'),causeOpts(),F('core'));
+  $('hmwOut').innerHTML=F('core')?'<b>다음 주 출발 질문 (자동)</b> 우리는 어떻게 하면 '+esc((pnShort()||'우리 고객'))+'이(가) 겪는 「<b>'+esc(cText(F('core')))+'</b>」 문제를 줄일 수 있을까? <span class="note">해결책 말이 들어가지 않게 팀 말로 고쳐 다음 주에 씁니다.</span>':'';
+  renderPersonal();
+ },
+ status:function(){var T=teamOf(team),pn=['pn_name','pn_scene','pn_goal','pn_pain','pn_quote'];
+  return [[has('tname'),'팀 이름','1탭 — 팀이 직접 정한 이름'],
+   [has('prob')&&!SOL.test(F('prob')),'팀 문제 한 문장','1탭 — 각자 쓰고 하나로'],
+   [has('lt_top'),'로직트리 맨 위 질문','3탭'],
+   [has('lt_basis')&&has('c1')&&has('c2')&&has('c3'),'기준 + 원인 3개','3탭'],
+   [['c1a','c1b','c2a','c2b','c3a','c3b'].every(has),'하위 원인 6개','3탭 — 원인마다 "왜?" 한 번 더'],
+   [CAUSES.every(function(id){return has(id)&&has('e_'+id);}),'칸마다 근거 표시','3탭 — 인터뷰·자료·추측'],
+   [['m1','m2','m3','m4'].every(function(k){return S.chk[k];}),'MECE 점검 4개','3탭'],
+   [picked().length>=1&&[1,2,3].filter(function(n){return has('q'+n);}).length>=3,'확인할 원인 + 질문 3개','3·4탭'],
+   [hasIv(),'인터뷰 기록 1건 이상','4탭 — 들은 말 그대로'],
+   [has('sv_c')&&has('sv_who')&&[1,2,3,4,5].filter(function(n){return has('sv_q'+n);}).length>=4,'온라인 설문 초안 (4문항 이상 + 대상)','4탭 아래 — 링크는 수업 뒤에도 됨'],
+   [pn.every(has),'페르소나 핵심 5칸','5탭 — 이름·장면·목표·불편·인용'],
+   [PN.filter(function(p){return F('pe_'+p[0])==='I'&&has(p[0]);}).length>=3,'"들은 말" 근거 3칸 이상','5탭 — 인터뷰로 확인한 칸'],
+   [has('core')&&has('core_why')&&has('hw'),'핵심 원인 + 과제 담당','5·6탭']];},
+ prompts:{svmsg:function(){var u=F('sv_url')||'(설문 링크를 먼저 붙여 넣으세요)';return '[대학 수업 설문] '+(F('sv_who')?F('sv_who')+'께 ':'')+'1분짜리 설문을 부탁드립니다. 이름·연락처는 묻지 않고, 결과는 수업 과제로만 씁니다. '+(F('sv_n')?'('+F('sv_n')+') ':'')+u;},survey:function(){return svText();},svai:function(){return '아래는 대학생 팀이 만든 온라인 설문 초안입니다. 문항을 새로 쓰거나 고쳐 쓰지 말고, 다음 규칙을 어긴 곳만 "문항 번호 / 어긴 규칙 / 이유" 한 줄씩 지적해 주세요: ① 첫 문항이 대상을 거르는가 ② 한 문항에 하나만 묻는가 ③ 답을 넣어 묻는 유도 문항이 없는가 ④ 보기가 겹치지 않고 빠짐없는가(기타 포함) ⑤ 개인정보를 묻지 않는가.\n확인하려는 것: '+(F('sv_c')?cText(F('sv_c')):'')+'\n대상: '+F('sv_who')+'\n\n'+svText();},mece:function(){return '아래는 대학생 팀이 만든 "왜?" 로직트리입니다. 고쳐 쓰거나 새 원인을 만들지 말고, MECE(겹침·빠짐) 관점에서 문제점만 3개 지적해 주세요. 각 지적은 "어느 칸 / 무엇이 문제 / 왜" 한 줄씩.\n\n맨 위 질문: '+F('lt_top')+'\n나누는 기준: '+basis()+'\n'+[1,2,3].map(function(n){return '원인 '+n+': '+F('c'+n)+'\n  - '+F('c'+n+'a')+'\n  - '+F('c'+n+'b');}).join('\n');}},
+ fill:{eb:function(){var e=ebOf(team);if(!e){$('msg_eb').textContent='e비즈 기록이 없는 팀입니다.';return 0;}var n=0;
+   var g=String(e.p_goal||'').split('/');var map={pn_name:e.p_name,pn_scene:e.p_sit,pn_goal:(g[0]||'').trim(),pn_now:(g.slice(1).join('/')||'').trim(),pn_pain:e.lw_why&&e.lw_why.charAt(0)!=='('?e.lw_why:'',pn_fear:e.p_fear,pn_crit:e.p_crit,pn_chan:e.p_chan,pn_limit:e.p_limit,pn_quote:(e.quotes||[])[0]||''};
+   Object.keys(map).forEach(function(k){if(setIfEmpty(k,map[k])){n++;if(!has('pe_'+k)){S.f['pe_'+k]='G';if(window.SY)SY.edit('f:pe_'+k);}}});
+   $('msg_eb').textContent=n?n+'칸을 불러왔습니다. 모두 "추측"으로 표시했습니다 — 인터뷰로 확인한 칸만 "들은 말"로 바꾸세요.':'채울 빈 칸이 없습니다.';return n;},
+  top:function(){var n=setIfEmpty('lt_top',teamOf(team).top);return n;}},
+ report:function(){return proPDT();}
+};
+
+var PRCSS=".ev{display:inline-block;border-radius:6px;padding:0 6px;font-size:.7rem;font-weight:700;border:1.5px solid transparent;line-height:1.6} .ev.D{background:#dbeafe;color:#1e40af} .ev.N{background:#fee2e2;color:#991b1b} .evb button.ev{cursor:pointer;opacity:.45;font:inherit;font-size:.72rem} .lt{overflow-x:auto} .lt-top small{display:block;font-weight:400;opacity:.8;font-size:.72rem} .lt-col{border-top:3px solid var(--gold);padding-top:8px} .pcard{border:2px solid var(--navy2);border-radius:14px;padding:12px 14px;background:var(--surface)} .lt2{--line:#c3cbdc;margin:4px 0} .lth b{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);align-items:center;justify-content:center;font-size:.7rem;margin-right:3px} .ltb{display:grid;grid-template-columns:26% 1fr;gap:0 26px;align-items:center} .lq small{display:block;width:fit-content;background:rgba(255,255,255,.14);border-radius:6px;padding:1px 7px;font-size:.68rem;font-weight:700;margin-bottom:6px} .lbrs{display:grid;gap:12px;position:relative;padding-left:16px} .lbr{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;align-items:center;position:relative} .lbr.t{--c:#0f766e;--cb:#e6f4f1} .lbr.o{--c:#b45309;--cb:#fbf1e3} .lbx small{display:block;color:var(--c);font-size:.72rem;font-weight:900} .llv{display:grid;gap:6px;position:relative;padding-left:13px} .lf{border:1.5px solid var(--c);border-radius:9px;padding:6px 9px;font-size:.8rem;background:var(--surface);position:relative;color:var(--text)} .lf.empty,.lbx.empty{opacity:.5;border-style:dashed;font-weight:400} .lf.no,.lbx.no{box-shadow:0 0 0 2px #dc2626;text-decoration:line-through;text-decoration-color:#dc262688} .lf.no .vr,.lbx.no .vr{color:#dc2626}.rpt{font-family:\"Noto Sans KR\",\"Malgun Gothic\",sans-serif;color:#1f2937;font-size:9.6pt;line-height:1.6}.rpt *{font-style:normal}.rpt .cv{border:1.5px solid #1b2a4a;border-radius:4px;padding:26px 28px;margin-bottom:14px}.rpt .cv .k{font-size:8.5pt;letter-spacing:.12em;color:#7c3aed;font-weight:700}.rpt .cv h1{font-size:20pt;line-height:1.3;margin:6px 0 4px;color:#1b2a4a;border:0}.rpt .cv .st{font-size:11pt;color:#475569;margin-bottom:18px}.rpt .cv table td{border:0;border-bottom:1px solid #e2e8f0;padding:5px 4px}.rpt .cv table td:first-child{width:90px;color:#64748b;font-weight:700}.rpt .ex{background:#f8fafc;border:1px solid #cbd5e1;border-left:5px solid #1b2a4a;padding:10px 14px;margin:8px 0 14px}.rpt .ex h3{margin:0 0 6px;font-size:10.5pt;color:#1b2a4a}.rpt .ex ol{margin:0;padding-left:18px}.rpt .ex li{margin:2px 0;color:#1f2937}.rpt .ex li b{color:#1b2a4a;display:inline-block;min-width:66px}.rpt h2{font-size:12.5pt;color:#1b2a4a;border-bottom:2px solid #7c3aed;padding-bottom:3px;margin:20px 0 6px;page-break-after:avoid}.rpt h2 span{color:#7c3aed;margin-right:6px}.rpt h3{font-size:10.2pt;color:#1b2a4a;margin:12px 0 4px}.rpt .lead{color:#475569;margin:0 0 6px;font-size:9pt}.rpt table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:8.9pt;page-break-inside:avoid}.rpt th,.rpt td{border:1px solid #cbd5e1;padding:5px 7px;text-align:left;vertical-align:top}.rpt th{background:#1b2a4a;color:#fff;font-weight:700}.rpt td.h{background:#f1f5f9;font-weight:700;color:#1b2a4a;width:22%}.rpt .tag{display:inline-block;border:1px solid #7c3aed;color:#5b21b6;border-radius:3px;padding:0 5px;font-size:7.8pt;margin-left:4px}.rpt .ok{color:#16a34a;font-weight:700}.rpt .ng{color:#dc2626;font-weight:700}.rpt .uk{color:#d97706;font-weight:700}.rpt pre.svp{white-space:pre-wrap;font-family:inherit;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:8px;font-size:8.6pt}.rpt .note{font-size:8pt;color:#64748b;border-top:1px solid #e2e8f0;padding-top:6px;margin-top:16px}.rpt .empty{color:#c2410c}.rpt .q{background:#faf5ff;border:1px solid #c4b5fd;border-radius:4px;padding:8px 12px;font-weight:700;color:#4c1d95}";
+function proPDT(){var T=teamOf(team),pk=picked(),vr=function(id){var r=F('vr_'+id);return r==='O'?'<span class="ok">✓ 맞음</span>':r==='X'?'<span class="ng">✗ 틀림</span>':r==='?'?'<span class="uk">? 아직 모름</span>':'<span class="empty">미확인</span>';};
+ var nO=pk.filter(function(id){return F('vr_'+id)==='O';}).length,nX=pk.filter(function(id){return F('vr_'+id)==='X';}).length,nQ=pk.length-nO-nX;
+ var ivl=ivSlots().filter(function(s){return has(s[0]+'_say');});
+ var EVL={I:'인터뷰',D:'자료',G:'추측'};
+ var h='<style>'+PRCSS+'</style><div class="rpt">';
+ h+='<div class="cv"><div class="k">PROJECT &amp; DESIGN THINKING · RESULT REPORT</div><h1>'+esc((F('tname')||team)+' — 문제의 진짜 원인을 확인한 기록')+'</h1><div class="st">로직트리로 원인을 나누고, 인터뷰와 설문으로 확인해, 근거가 있는 페르소나 한 명으로 정리한 결과</div><table><tr><td>과목</td><td>프로젝트와 디자인씽킹</td></tr><tr><td>팀</td><td>'+esc(F('tname')||team)+' · '+esc(T.tag)+'</td></tr><tr><td>팀원</td><td>'+esc(T.mem.join(' · '))+'</td></tr><tr><td>작성일</td><td>'+new Date().toLocaleDateString('ko-KR')+'</td></tr></table></div>';
+ h+='<div class="ex"><h3>핵심 요약</h3><ol><li><b>문제</b> '+V('prob')+'</li><li><b>확인할 가정</b> '+V('ebh_cause')+' <span class="tag">오전 e비즈에서 찾은 멈춘 이유</span></li><li><b>확인 결과</b> 확인한 원인 '+pk.length+'개 중 맞음 '+nO+' · 틀림 '+nX+' · 아직 모름 '+nQ+' (인터뷰 '+ivl.length+'건'+(has('sv_res')?' · 설문':'')+')</li><li><b>핵심 원인</b> '+(F('core')?esc(cText(F('core'))):'<span class="empty">(비어 있음)</span>')+'</li><li><b>다음 질문</b> '+(F('core')?'우리는 어떻게 하면 '+esc(pnShort()||'우리 고객')+'이(가) 겪는 「'+esc(cText(F('core')))+'」 문제를 줄일 수 있을까?':'<span class="empty">(핵심 원인을 정하면 자동)</span>')+'</li></ol></div>';
+ h+='<h2><span>1</span>출발점 — 문제와 확인할 가정</h2><table><tr><td class="h">팀 문제 한 문장</td><td>'+V('prob')+'</td></tr><tr><td class="h">오전 e비즈에서 찾은 멈춘 이유</td><td>'+V('ebh_cause')+'</td></tr><tr><td class="h">로직트리 맨 위 질문</td><td>'+V('lt_top')+'</td></tr></table>';
+ h+='<h2><span>2</span>원인 구조 — 로직트리</h2><p class="lead">나누는 기준 「'+esc(basis())+'」으로 큰 원인 3개, 각각 "왜?"를 한 번 더 물어 하위 원인 2개씩. 근거: 인터뷰(들은 말) · 자료 · 추측(확인 전).</p>'+ourTree()+'<p class="lead">MECE 점검 '+['m1','m2','m3','m4'].filter(function(k){return S.chk[k];}).length+'/4 통과'+(has('ai_mece')?' · AI 지적에 대한 팀 판단: '+esc(F('ai_mece')):'')+'</p>';
+ h+='<h2><span>3</span>검증 설계 — 확인할 원인과 인터뷰 질문</h2><table><tr><th style="width:38%">확인할 원인</th><th style="width:12%">근거</th><th>인터뷰 질문</th></tr>'+[1,2,3].map(function(n){var c=F('qc'+n);return '<tr><td>'+(c?esc(cLabel(c)+': '+cText(c)):'—')+'</td><td>'+(c&&F('e_'+c)?EVL[F('e_'+c)]:'—')+'</td><td>'+V('q'+n)+'</td></tr>';}).join('')+'</table>';
+ h+='<h2><span>4</span>인터뷰 기록</h2>'+(ivl.length?'<table><tr><th style="width:20%">누구 · 언제</th><th>들은 말 그대로</th><th style="width:20%">놀란 점</th><th style="width:16%">연결된 원인</th></tr>'+ivl.map(function(s){var k=s[0],l=F(k+'_link');return '<tr><td>'+esc(s[1])+'<br>'+V(k+'_who')+' · '+V(k+'_when')+'</td><td>'+V(k+'_say')+'</td><td>'+V(k+'_wow')+'</td><td>'+(l==='new'?'새 원인':l==='no'?'짐작과 반대':l?esc(cLabel(l)):'—')+'</td></tr>';}).join('')+'</table>':'<p class="empty">(기록 없음)</p>');
+ h+='<h2><span>5</span>온라인 설문</h2>'+(has('sv_q1')?'<table><tr><td class="h">확인할 원인</td><td>'+(F('sv_c')?esc(cText(F('sv_c'))):'—')+'</td></tr><tr><td class="h">대상 · 채널</td><td>'+V('sv_who')+' · '+V('sv_ch')+'</td></tr><tr><td class="h">목표 · 마감</td><td>'+V('sv_n')+'</td></tr><tr><td class="h">설문 링크</td><td>'+V('sv_url')+'</td></tr><tr><td class="h">결과 (실제 숫자)</td><td>'+V('sv_res')+'</td></tr></table><h3>문항</h3><pre class="svp">'+esc(svText())+'</pre>':'<p class="empty">(설문 초안 없음)</p>');
+ h+='<h2><span>6</span>페르소나 — 근거가 있는 한 사람</h2>'+pnCard()+'<p class="lead">'+pnChecks().map(function(c){return (c[0]?'✓ ':'· ')+c[1];}).join(' &nbsp; ')+'</p>';
+ h+='<h2><span>7</span>결론 — 확인 결과와 다음 단계</h2><table><tr><th style="width:55%">확인한 원인</th><th>결과</th></tr>'+(pk.length?pk.map(function(id){return '<tr><td>'+esc(cLabel(id)+': '+cText(id))+'</td><td>'+vr(id)+'</td></tr>';}).join(''):'<tr><td colspan="2" class="empty">(고른 원인 없음)</td></tr>')+'</table><table><tr><td class="h">핵심 원인</td><td>'+(F('core')?esc(cText(F('core'))):'<span class="empty">(비어 있음)</span>')+'</td></tr><tr><td class="h">그렇게 판단한 이유</td><td>'+V('core_why')+'</td></tr></table>'+(F('core')?'<p class="q">다음 주 출발 질문 — 우리는 어떻게 하면 '+esc(pnShort()||'우리 고객')+'이(가) 겪는 「'+esc(cText(F('core')))+'」 문제를 줄일 수 있을까?</p>':'');
+ h+='<h2><span>8</span>부록 — 과제와 되돌아보기</h2><table><tr><td class="h">실제 사용자 인터뷰 담당</td><td>'+V('hw')+'</td></tr><tr><td class="h">MECE 한 문장</td><td>'+V('x1')+'</td></tr><tr><td class="h">짐작과 가장 달랐던 말</td><td>'+V('x2')+'</td></tr><tr><td class="h">헷갈렸던 것</td><td>'+V('x3')+'</td></tr></table>';
+ h+='<p class="note">근거 표시: 인터뷰 = 사람에게 직접 들은 말 · 자료 = 확인한 자료 · 추측 = 아직 확인 전. 숫자는 실제로 나온 결과만 적었고, AI가 만든 문장은 팀이 검토해 고친 것만 실었다.</p></div>';return h;}
+
+function hasIv(){return ivSlots().some(function(s){return has(s[0]+'_say');});}
+function pnShort(){var n=F('pn_name').split(/[·(,]/)[0].trim();return n;}
+function pnChecks(){var I=PN.filter(function(p){return F('pe_'+p[0])==='I'&&has(p[0]);}).length,G=PN.filter(function(p){return F('pe_'+p[0])==='G'&&has(p[0]);}).length;
+ return [[has('pn_name')&&/가명|\(|·/.test(F('pn_name')),'구체적인 한 사람 (가명·나이·특징)'],[has('pn_scene')&&F('pn_scene').length>=25,'장면이 보인다 (언제·어디서·무엇을)'],[has('pn_pain')&&!SOL.test(F('pn_pain'))&&!!F('core'),'불편 = 로직트리 원인과 연결'],[has('pn_quote')&&/["“”'‘’]/.test(F('pn_quote')),'실제로 한 말 인용'],[I>=3,'들은 말 근거 '+I+'칸 (3칸 이상)'],[G<=4,'추측 '+G+'칸 (4칸 이하로 줄이기)']];}
+function pnCard(){if(!PN.some(function(p){return has(p[0]);}))return '<p class="note">5탭 칸을 채우면 카드가 만들어집니다.</p>';
+ function row(k,lab){if(!has(k))return '';var e=F('pe_'+k);return '<div class="pr"><span class="pl">'+lab+'</span><span class="pv2">'+nl(F(k))+(e?' <span class="ev '+e+'">'+(e==='I'?'들은 말':EVN[e])+'</span>':'')+'</span></div>';}
+ return '<div class="pcard"><div class="ph"><div class="av">'+esc((pnShort()||'?').charAt(0))+'</div><div><b>'+esc(F('pn_name')||'(이름)')+'</b>'+(has('pn_quote')?'<q>'+esc(F('pn_quote').replace(/^["“'‘]|["”'’]$/g,''))+'</q>':'')+'</div></div>'+row('pn_scene','장면')+row('pn_goal','이루고 싶은 것')+row('pn_now','지금 방법')+row('pn_pain','가장 큰 불편')+row('pn_fear','걱정')+row('pn_crit','따지는 것')+row('pn_chan','정보 얻는 곳')+row('pn_limit','제약')+'</div>';}
+function renderPersonal(){if(!team||!$('myProb'))return;var T=teamOf(team),mi=myIdx();
+ if(!mi){$('myProb').innerHTML='<p class="note">1탭 위에서 <b>나는</b>(이름)을 고르면 내 칸이 열립니다.</p>';}
+ else if(!$('pm_box')||$('pm_box').dataset.mi!==mi){$('myProb').innerHTML='<div class="fld" id="pm_box" data-mi="'+mi+'"><label>내가 생각하는 팀 문제 (먼저 혼자)</label><textarea rows="2" data-f="pm_'+mi+'" placeholder="(누가) (어떤 상황에서) (무엇 때문에) 불편을 겪는다"></textarea></div>';bindFields();}
+ var names=T.mem.length?T.mem:[],keys=names.map(function(n,i){return ['pm_'+i,n];});if(mi==='x')keys.push(['pm_x','목록에 없는 팀원']);
+ var mine=mi?has('pm_'+mi):false,done=keys.filter(function(k){return has(k[0]);}).length;
+ $('allProb').innerHTML=!mine?'<p class="note">내 문장을 쓰면 팀원 문장이 보입니다 ('+done+'/'+keys.length+'명 씀).</p>':'<div class="pmall">'+keys.map(function(k){return '<div><b>'+esc(k[1])+'</b>'+(has(k[0])?esc(F(k[0])):'<span class="note">아직</span>')+'</div>';}).join('')+'</div><p class="note">서로 다르면 그게 정상입니다. <b>e비즈 페르소나의 상황</b>에 가장 가까운 문장을 골라 합치세요.</p>';}
+
+/* 공통 워크시트 엔진: 팀 선택 · 입력 저장(이 브라우저) · 진행률 · 프롬프트 복사 · 결과 보고서 · 작업 파일 · 이전 버전.
+   학생 입력은 자동으로 지워지거나 덮어써지지 않는다. 불러오기는 빈 칸만 채운다. */
+var $=function(i){return document.getElementById(i);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function nl(s){return esc(s).replace(/\n/g,'<br>');}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+var STORE_OK=(function(){try{localStorage.setItem('ws-t','1');localStorage.removeItem('ws-t');return true;}catch(e){return false;}})();
+var KEY=CFG.key, team='', S=null, TAB=Math.random().toString(36).slice(2), lastSnap=0;
+function F(k){return (S&&S.f&&S.f[k]!=null)?String(S.f[k]):'';}
+function has(k){return F(k).trim()!=='';}
+function blank(){return {f:{},chk:{}};}
+function load(t){var r=lsGet(KEY+t);try{S=r?JSON.parse(r):blank();}catch(e){S=blank();}S.f=S.f||{};S.chk=S.chk||{};}
+function snapshot(force){if(!team||!STORE_OK)return;var now=Date.now();if(!force&&now-lastSnap<60000)return;lastSnap=now;var k=KEY+'hist-'+team,h=[];try{h=JSON.parse(lsGet(k)||'[]');}catch(e){}var cur=JSON.stringify(S);if(h.length&&h[h.length-1].s===cur)return;h.push({at:now,s:cur});if(h.length>30)h=h.slice(h.length-30);lsSet(k,JSON.stringify(h));}
+function save(){if(team){S._at=Date.now();S._by=TAB;lsSet(KEY+team,JSON.stringify(S));snapshot(false);if(window.SY)SY.kick();}progress();}
+function setIfEmpty(k,v){if(window.SY&&team&&(!SY.ready()||SY.srv(k)))return 0;if(!has(k)&&v!=null&&String(v).trim()!==''){S.f[k]=v;if(window.SY)SY.edit('f:'+k);return 1;}return 0;}
+function mergeInto(dst,src,conf,path){Object.keys(src||{}).forEach(function(k){if(k==='_at'||k==='_by')return;var v=src[k],d=dst[k],p=path?path+'.'+k:k;
+ if(v&&typeof v==='object'&&!Array.isArray(v)){if(!d||typeof d!=='object')dst[k]=d={};mergeInto(d,v,conf,p);return;}
+ var vs=(v==null?'':String(v)).trim(),ds=(d==null?'':String(d)).trim();if(!ds&&vs)dst[k]=v;else if(vs&&ds&&vs!==ds&&typeof v!=='boolean')conf.push({p:p,v:vs});else if(typeof v==='boolean'&&v&&!d)dst[k]=true;});}
+
+/* tabs */
+$('tabs').addEventListener('click',function(e){var b=e.target.closest('button[data-p]');if(b)go(b.dataset.p);});
+function go(p){document.querySelectorAll('.tabs button').forEach(function(x){x.classList.toggle('on',x.dataset.p===p);});document.querySelectorAll('.pane').forEach(function(x){x.classList.toggle('on',x.id===p);});rerender();if(p===lastPane())renderHist();window.scrollTo(0,0);}
+function lastPane(){var ps=document.querySelectorAll('.pane');return ps[ps.length-1].id;}
+document.addEventListener('click',function(e){var j=e.target.closest('[data-go]');if(j){e.preventDefault();go(j.dataset.go);}});
+
+/* team */
+if(false){
+ $('teams').innerHTML=CFG.teams.map(function(t){return '<button type="button" class="tcard" data-t="'+esc(t.id)+'"><b>'+esc(t.id)+'</b><span>'+esc(t.tag)+'</span></button>';}).join('');
+ $('teams').addEventListener('click',function(e){var b=e.target.closest('.tcard');if(b)pick(b.dataset.t);});
+}
+if(CFG.roles&&$('roleSel')){
+ $('roleSel').innerHTML='<option value="">역할 고르기</option>'+CFG.roles.map(function(r){return '<option>'+r[0]+'</option>';}).join('');
+ $('roleTbl').innerHTML='<tr><th style="width:15%">역할</th><th style="width:33%">계속 던지는 질문</th><th>오늘 책임지는 칸</th></tr>'+CFG.roles.map(function(r){return '<tr><td><b>'+r[0]+'</b></td><td style="font-weight:700;color:var(--navy2)">'+r[1]+'</td><td style="font-size:.8rem;color:var(--t2)">'+r[2]+'</td></tr>';}).join('');
+ $('roleSel').addEventListener('change',function(){lsSet(KEY+'role-'+team,this.value);renderMe();});
+}
+function renderMe(){if(!$('mytask'))return;var r=(CFG.roles||[]).filter(function(x){return x[0]===$('roleSel').value;})[0];$('mytask').innerHTML=r?('<b>'+r[0]+'</b><br>계속 던질 질문: <b>'+r[1]+'</b><br><span style="opacity:.88">'+r[2]+'</span>'):'역할을 고르면 오늘 내가 책임지는 칸이 보입니다.';}
+function pick(t){team=t;lsSet(KEY+'team',t);load(t);if(/팀을 먼저/.test($('dupWarn').innerHTML))$('dupWarn').style.display='none';
+ document.querySelectorAll('.tcard').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
+ if($('meBox'))$('meBox').style.display='block';if($('roleSel')){$('roleSel').value=lsGet(KEY+'role-'+t)||'';renderMe();}
+ if(CFG.onPick)CFG.onPick(t);bindFields();rerender();if(window.SY)SY.start(t);}
+
+/* fields */
+function bindFields(){var ae=document.activeElement;document.querySelectorAll('[data-f]').forEach(function(el){var v=F(el.dataset.f);if(el===ae&&el.tagName!=='SELECT'&&el.type!=='hidden'){if(el.value!==v&&window.SY)SY.pend(el,v);return;}el.value=v;});
+ document.querySelectorAll('[data-ck]').forEach(function(el){el.checked=!!(S&&S.chk[el.dataset.ck]);});
+ document.querySelectorAll('[data-ex]').forEach(function(el){var v=team&&CFG.ex?CFG.ex(team,el.dataset.ex):'';el.textContent=v?'(예) '+v:'';});}
+function onEdit(e){var el=e.target;if(!team){if(el.dataset&&(el.dataset.f||el.dataset.ck)){$('dupWarn').style.display='block';$('dupWarn').innerHTML='<b>1탭에서 팀을 먼저 고르세요.</b> 팀을 고르기 전에 쓴 내용은 저장되지 않습니다.';}return;}
+ if(el.dataset.f){if(window.SY)SY.edit('f:'+el.dataset.f);S.f[el.dataset.f]=el.value;save();rerender(el);return;}
+ if(el.dataset.ck){if(window.SY)SY.edit('c:'+el.dataset.ck);S.chk[el.dataset.ck]=el.checked;save();rerender(el);}}
+document.addEventListener('input',onEdit);document.addEventListener('change',onEdit);
+function rerender(src){if(!team)return;if(CFG.render)CFG.render(src);renderSub();progress();if(window.SY&&SY.renderLost)SY.renderLost();}
+
+/* prompts / fill */
+document.addEventListener('click',function(e){
+ var b=e.target.closest('button[data-cp]');if(b){if(!team){go(document.querySelector('.pane').id);return;}copy(CFG.prompts[b.dataset.cp](),b);return;}
+ var s=e.target.closest('button[data-show]');if(s){if(!team)return;var pv=$('pv_'+s.dataset.show);pv.textContent=CFG.prompts[s.dataset.show]();pv.style.display=pv.style.display==='block'?'none':'block';return;}
+ var f=e.target.closest('button[data-fill]');if(f){if(!team)return;if(window.SY&&!SY.ready()){var m0=$('msg_'+f.dataset.fill);if(m0)m0.textContent='팀 서버에서 팀원 글을 받은 뒤에 넣을 수 있어요. 몇 초 뒤 다시 누르세요.';return;}snapshot(true);var n=CFG.fill[f.dataset.fill]();save();bindFields();rerender();var m=$('msg_'+f.dataset.fill);if(m)m.textContent=n>0?n+'칸을 빈 칸에 넣었습니다. 이미 쓴 칸은 그대로입니다. 우리 팀 말로 고쳐 쓰세요.':(n<0?'':'넣을 빈 칸이 없습니다. 이미 쓴 내용은 그대로입니다.');}
+});
+function copy(text,btn){var o=btn.textContent;function done(ok){btn.textContent=ok?'✓ 복사됨':'복사 실패 · 보기에서 직접 복사';setTimeout(function(){btn.textContent=o;},1800);}
+ function legacy(){try{var x=document.createElement('textarea');x.value=text;x.style.position='fixed';x.style.opacity='0';document.body.appendChild(x);x.select();var r=document.execCommand('copy');document.body.removeChild(x);return r;}catch(e){return false;}}
+ try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(legacy());});}else done(legacy());}catch(e){done(legacy());}}
+
+/* progress / submit */
+function status(){return team&&CFG.status?CFG.status():[];}
+function progress(){var s=status(),d=s.filter(function(x){return x[0];}).length;$('progBar').style.width=(s.length?d/s.length*100:0)+'%';$('progTxt').textContent=team?(CFG.label?CFG.label():team)+' · 진행 '+d+'/'+s.length:(CFG.teams?'팀을 먼저 고르세요':'');}
+function renderSub(){if(!$('subChk'))return;$('subChk').innerHTML=status().map(function(a){return '<div class="qi '+(a[0]?'ok':'ng')+'"><span class="qs">'+(a[0]?'✓':'!')+'</span><div><b>'+a[1]+'</b>'+(a[2]&&!a[0]?'<br><span class="note">'+a[2]+'</span>':'')+'</div></div>';}).join('');}
+
+/* report */
+var RCSS='body{font-family:"Noto Sans KR","Malgun Gothic",sans-serif;color:#111;background:#fff;margin:0}#rp{max-width:900px;margin:16px auto;padding:0 16px;font-size:10pt;line-height:1.55}h1{font-size:15pt;margin:0 0 2px;color:#1b2a4a}h2{font-size:11.5pt;color:#1b2a4a;border-bottom:2px solid #b98a3d;padding-bottom:2px;margin:16px 0 6px}table{width:100%;border-collapse:collapse;font-size:9pt;margin:4px 0}th,td{border:1px solid #c3cbdc;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eef1f6}.m{color:#555;font-size:9pt}.kv b{display:inline-block;min-width:120px;color:#1b2a4a}.empty{color:#c2410c}.tb{position:sticky;top:0;background:#1b2a4a;color:#fff;padding:10px 16px;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}.tb button{background:#b98a3d;color:#fff;border:0;border-radius:8px;padding:8px 16px;font-weight:700;cursor:pointer}svg{max-width:100%}@media print{.tb{display:none}@page{size:A4;margin:12mm}}';
+function V(k){var v=F(k).trim();return v?nl(v):'<span class="empty">(비어 있음)</span>';}
+function aname(x){var d=new Date(),z=function(n){return (n<10?'0':'')+n;};var id=CFG.teams?('team'+(CFG.teams.map(function(t){return t.id;}).indexOf(team)+1)):'team';return CFG.file+'-'+id+'-'+x+'-'+d.getFullYear()+z(d.getMonth()+1)+z(d.getDate());}
+function reportDoc(){return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(aname('report'))+'</title><style>'+RCSS+'</style></head><body><div class="tb">인쇄 창에서 "PDF로 저장"을 고르세요<button onclick="window.print()">인쇄 / PDF로 저장</button></div><div id="rp">'+CFG.report()+'</div><script>window.onload=function(){setTimeout(function(){window.print();},500);};<\/script></body></html>';}
+function dl(name,text,type){try{var u=URL.createObjectURL(new Blob([text],{type:type}));var a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},1500);return true;}catch(e){return false;}}
+
+function loadJS(src){return new Promise(function(ok,no){if(document.querySelector('script[src="'+src+'"]'))return ok();var s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=function(){no(new Error('load'));};document.head.appendChild(s);});}
+async function savePdfDirect(){
+ var msg=$('prMsg'),btn=$('pdfBtn');if(!team){go(document.querySelector('.pane').id);return;}
+ btn.disabled=true;msg.textContent='PDF를 만드는 중…';var wrap=null;
+ try{
+  await loadJS('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  await loadJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+  wrap=document.createElement('div');wrap.style.cssText='position:absolute;left:-10000px;top:0;width:794px;background:#fff';
+  var body='<div id="rp" style="max-width:none;margin:0;padding:34px 40px">'+CFG.report()+'</div>';
+  wrap.innerHTML='<style>'+RCSS.replace(/body\{[^}]*\}/,'')+'#rpw h2{break-before:auto}#rpw table{font-size:9.5pt}</style><div id="rpw">'+body+'</div>';
+  document.body.appendChild(wrap);
+  var rp=wrap.querySelector('#rp');var meta='';
+  var heads=[].slice.call(rp.querySelectorAll('h2'));
+  // 표지
+  var cv=document.createElement('div');cv.setAttribute('data-page','1');cv.style.cssText='display:flex;flex-direction:column;justify-content:center;gap:14px;padding:120px 60px 40px;font-family:"Noto Sans KR","Malgun Gothic",sans-serif';
+  cv.innerHTML='<div style="color:#b98a3d;font-weight:700;font-size:13px;letter-spacing:.05em">프로젝트와디자인씽킹 · 로직트리 · 인터뷰 · 페르소나</div><div style="font-size:30px;font-weight:700;color:#1b2a4a;line-height:1.35">로직트리 · 인터뷰 · 페르소나 결과 보고서</div><div style="border-top:3px solid #1b2a4a;width:80px"></div>';
+  var mt=document.createElement('div');mt.style.cssText='font-size:15px;line-height:1.9;color:#1d2433';
+  [['팀',(F('tname')||team)+' — '+teamOf(team).mem.join(' · ')],['주제',teamOf(team).tag],['페르소나',F('pn_name')||'(아직 안 씀)'],['작성',new Date().toLocaleDateString('ko-KR')],['쓰임',meta]].forEach(function(r){var d=document.createElement('div');d.innerHTML='<span style="display:inline-block;width:80px;color:#5d6679;font-size:13px;vertical-align:top">'+r[0]+'</span>';d.appendChild(document.createTextNode(r[1]));mt.appendChild(d);});
+  cv.appendChild(mt);
+  // 목차
+  var tc=document.createElement('div');tc.style.cssText='padding:40px 44px 20px;font-family:"Noto Sans KR","Malgun Gothic",sans-serif';
+  tc.innerHTML='<div style="font-size:17px;font-weight:700;color:#1b2a4a;padding-left:10px;border-left:5px solid #b98a3d;margin-bottom:10px">목차</div>'+heads.map(function(h){return '<div style="font-size:14px;line-height:2;border-bottom:1px dotted #dde1ea">'+esc(h.textContent)+'</div>';}).join('');
+  rp.setAttribute('data-page','1');
+  
+  heads.forEach(function(h){h.classList.add('pb');});rp.querySelectorAll('tr,.kv,svg,p').forEach(function(e){e.classList.add('pb');});
+  var _th=document.documentElement.getAttribute('data-theme');document.documentElement.setAttribute('data-theme','light');wrap.style.color='#111';wrap.style.background='#fff';
+  var SC=2,canvas;try{canvas=await window.html2canvas(wrap,{scale:SC,backgroundColor:'#ffffff'});}finally{if(_th)document.documentElement.setAttribute('data-theme',_th);else document.documentElement.removeAttribute('data-theme');}
+  var base=wrap.getBoundingClientRect().top,pos=function(e){return Math.round((e.getBoundingClientRect().top-base)*SC);};
+  var breaks=[].slice.call(wrap.querySelectorAll('.pb')).map(pos).filter(function(y){return y>0;});
+  var forced=[].slice.call(wrap.querySelectorAll('[data-page]')).map(pos).filter(function(y){return y>0;});
+  // 장 제목이 쪽 맨 아래 홀로 남지 않게: 제목 위치는 끊는 자리로만 쓰고, 제목 바로 뒤는 끊지 않음
+  var hpos=heads.map(pos);
+  var pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4'}),PW=595.28,PH=841.89,Mg=22,iw=PW-2*Mg,ratio=iw/canvas.width,maxH=Math.floor((PH-2*Mg-14)/ratio);
+  var y=0,first=true,pg=0;
+  while(y<canvas.height-4){var end=Math.min(y+maxH,canvas.height);
+   var fz=forced.filter(function(b){return b>y+4&&b<end;});if(fz.length)end=fz[0];
+   else if(end<canvas.height){var cand=breaks.filter(function(b){return b>y+200&&b<=end&&!hpos.some(function(h){return b>h&&b-h<90;});});if(cand.length)end=cand[cand.length-1];}
+   var sl=document.createElement('canvas');sl.width=canvas.width;sl.height=end-y;var cx=sl.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,sl.width,sl.height);cx.drawImage(canvas,0,y,canvas.width,end-y,0,0,canvas.width,end-y);
+   if(!first)pdf.addPage();first=false;pg++;pdf.addImage(sl.toDataURL('image/jpeg',0.92),'JPEG',Mg,Mg,iw,(end-y)*ratio);
+   if(pg>1){pdf.setFontSize(9);pdf.setTextColor(120);pdf.text(String(pg-1),PW/2,PH-12,{align:'center'});}
+   y=end;}
+  var fname=aname('report')+'.pdf';
+  var blob=pdf.output('blob');var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download=fname;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},2000);
+  msg.innerHTML='<b>'+esc(fname)+'</b>을 내려받았습니다. DOOR에 올려 주세요. 내려받기가 안 되면 「인쇄 창으로 열기」를 쓰세요.';
+ }catch(e){msg.textContent=(e&&e.message==='load')?'PDF 도구를 불러오지 못했습니다. 「인쇄 창으로 열기」로 저장하세요.':'PDF를 만들지 못했습니다. 「인쇄 창으로 열기」로 저장하세요.';}
+ finally{if(wrap)wrap.remove();btn.disabled=false;}
+}
+$('pdfBtn').addEventListener('click',savePdfDirect);
+$('printBtn').addEventListener('click',function(){if(!team){go(document.querySelector('.pane').id);return;}var html=reportDoc(),w=null;try{w=window.open('','_blank');}catch(e){}
+ if(w&&w.document){try{w.document.open();w.document.write(html);w.document.close();$('prMsg').innerHTML='새 창에서 결과 보고서가 열렸습니다. 인쇄 창의 "대상"에서 <b>PDF로 저장</b>을 고르세요.';return;}catch(e){}}
+ if(dl(aname('report')+'.html',html,'text/html')){$('prMsg').innerHTML='새 창이 막혀 <b>'+aname('report')+'.html</b>을 내려받았습니다. 파일을 열면 인쇄 창이 뜹니다 → PDF로 저장.';return;}
+ $('printReport').innerHTML='<style>'+RCSS+'</style><div id="rp">'+CFG.report()+'</div>';window.print();});
+
+/* work file / history */
+function importObj(o){if(!o||!o.s||o.k!==KEY)return false;if(CFG.teams){if(CFG.teams.map(function(t){return t.id;}).indexOf(o.t)<0)return false;if(team!==o.t)pick(o.t);}else if(!team)pick('solo');
+ snapshot(true);var conf=[];var B0=JSON.stringify(S.f||{});mergeInto(S,o.s,conf,'');if(window.SY){var b0=JSON.parse(B0);Object.keys(S.f||{}).forEach(function(k){if(String(S.f[k]||'')!==String(b0[k]||''))SY.edit('f:'+k);});}save();snapshot(true);bindFields();rerender();
+ $('impMsg').innerHTML='비어 있던 칸만 채웠습니다. 이미 쓴 내용은 그대로입니다.'+(conf.length?' 서로 다른 칸 '+conf.length+'개는 바꾸지 않았습니다(필요하면 직접 옮기세요):<br>'+conf.map(function(c){return '· '+esc(c.p)+': '+esc(c.v);}).join('<br>'):'');return true;}
+$('saveFile').addEventListener('click',function(){if(!team)return;var ok=dl(aname('work')+'.json',JSON.stringify({k:KEY,t:team,s:S,at:new Date().toISOString()}),'application/json');var b=this;b.textContent=ok?'✓ 저장됨':'저장 실패';setTimeout(function(){b.textContent='작업 파일 저장';},2000);});
+$('openFile').addEventListener('change',function(){var f=this.files&&this.files[0],inp=this;if(!f)return;var r=new FileReader();r.onload=function(){var o=null;try{o=JSON.parse(r.result);}catch(e){}if(!importObj(o))$('impMsg').textContent='이 워크시트의 작업 파일이 아닙니다.';inp.value='';};r.readAsText(f,'utf-8');});
+function renderHist(){if(!team){$('histBox').innerHTML='';return;}var h=[];try{h=JSON.parse(lsGet(KEY+'hist-'+team)||'[]');}catch(e){}
+ $('histBox').innerHTML=h.length?'<div class="row"><select id="histSel">'+h.map(function(x,i){return '<option value="'+i+'">'+new Date(x.at).toLocaleString('ko-KR')+'</option>';}).reverse().join('')+'</select><button class="btn ghost" id="histBtn" type="button">이 버전으로 복원</button></div>':'<p class="note">아직 보관된 버전이 없습니다.</p>';
+ var hb=$('histBtn');if(hb)hb.onclick=function(){var x=h[+$('histSel').value];if(!x)return;if(hb.dataset.arm!=='1'){hb.dataset.arm='1';hb.textContent='한 번 더 누르면 복원 (지금 내용은 먼저 보관됨)';return;}snapshot(true);lastSnap=0;var S0=S;S=JSON.parse(x.s);if(window.SY)Object.keys(S.f||{}).forEach(function(k){if(String(S.f[k])!==String((S0.f||{})[k]||''))SY.edit('f:'+k);});save();snapshot(true);bindFields();rerender();renderHist();};}
+window.addEventListener('storage',function(e){if(!team||e.key!==KEY+team||!e.newValue)return;var inc;try{inc=JSON.parse(e.newValue);}catch(x){return;}if(inc._by===TAB)return;snapshot(true);
+ var conf=[];mergeInto(S,inc,conf,'');lsSet(KEY+team,JSON.stringify(S));$('dupWarn').style.display='block';$('dupWarn').innerHTML='<b>같은 작업이 이 브라우저의 다른 창에서도 열려 있습니다.</b> 한 창에서만 작업하세요. 다른 창 내용은 빈 칸에만 합쳤고, 이 창 내용은 바뀌지 않았습니다.';
+ var a=document.activeElement;if(!a||!/TEXTAREA|INPUT|SELECT/.test(a.tagName)){bindFields();rerender();}});
+if(!STORE_OK){$('dupWarn').style.display='block';$('dupWarn').innerHTML='<b>이 브라우저는 저장이 막혀 있습니다(시크릿 창 등).</b> 창을 닫으면 작업이 사라집니다. 일반 창에서 열거나 마지막 탭의 "작업 파일 저장"으로 수시로 백업하세요.';}
+window.addEventListener('pagehide',function(){snapshot(true);});
+
+/* ===== 팀 공동 작성 (전자상거래 캡스톤 서버를 같이 씀 · 이 워크시트 기록은 pdt11: 로 구분) ===== */
+var SY=(function(){
+ var URL_='https://script.google.com/macros/s/AKfycbxtSZUz1V81-N0-DUjKk-FQL-R1aNBBAmVTucZLfWcVSUcVA4nfDKG91nat5GczAZki/exec',KEY_='capec-2026-2',PFX='pdt11:';
+ var DEV=(function(){var d=lsGet('ws-dev');if(!d){d=Math.random().toString(36).slice(2,10);lsSet('ws-dev',d);}return d;})();
+ var seq=0,sent={},fly={},dirty={},mine={},doneAt={},busy=false,at=0,fail=0,pushT=null,pollT=null,tm='',PEND={},ED={},pbT=null,presQ=null,lastPres='';
+ function role(){var v=($('roleSel')&&$('roleSel').value)||'';return v&&v!=='__x'?v:'팀원';}
+ function saveMeta(){if(!tm)return;lsSet(KEY+'dirty-'+tm,JSON.stringify(Object.keys(dirty)));lsSet(KEY+'mine-'+tm,JSON.stringify(mine));}
+ function flat(){var o={};Object.keys(S.f||{}).forEach(function(k){o['f:'+k]=S.f[k]==null?'':String(S.f[k]);});Object.keys(S.chk||{}).forEach(function(k){o['c:'+k]=S.chk[k]?'1':'';});
+  var st=status();o._prog=JSON.stringify({d:st.filter(function(x){return x[0];}).length,n:st.length,it:st.map(function(x){return [x[0]?1:0,String(x[1]).replace(/ \(.*$/,'')];})});return o;}
+ function bar(){var nd=Object.keys(dirty).length,t=at?new Date(at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'',ok=fail===0&&at>0,cls,h;
+  if(!tm){cls='';h='팀을 고르면 자동 저장과 팀원 공유가 시작됩니다.';}
+  else if(ok&&!nd){cls='ok';h='<b>✓ 저장됨</b> — 팀 서버 '+t+' · 팀원 화면에도 반영. 칸을 쓰면 자동 저장되고, 단계를 마치면 아래 버튼을 눌러 확인하세요.';}
+  else if(ok||(fail<3&&at>0)){cls='';h='<b>보내는 중 '+nd+'칸</b> — 이 노트북에는 이미 저장됨. 서버가 붐비면 몇 초 걸립니다.';}
+  else{cls='bad';h='<b>⚠ 서버 응답 느림</b> — 이 노트북에는 저장되어 있습니다'+(nd?' (아직 못 보낸 칸 '+nd+'개)':'')+'. 새로 고침해도 지워지지 않고, 연결되면 자동으로 보냅니다.';}
+  document.querySelectorAll('.savebar').forEach(function(b){var pid=b.dataset.sb,lab={p1:'팀·출발점',p2:'로직트리란?',p3:'로직트리',p4:'인터뷰·설문',p5:'페르소나',p6:'제출'}[pid]||'';b.className='savebar '+cls;b.innerHTML='<span>'+h+'</span>'+(tm?'<button type="button" class="btn" data-sbsave="'+pid+'">이 단계 저장'+(lab?' ('+lab+')':'')+'</button>':'');});
+  var e=$('syncLine'),eds=Object.keys(ED).map(function(k){return ED[k];});
+  if(e)e.innerHTML=!tm?'<span class="dot off"></span>팀을 고르면 팀원과 함께 쓰기가 시작됩니다':(ok?'<span class="dot on"></span>팀원과 함께 쓰는 중 · 마지막 저장 '+t:'<span class="dot off"></span>서버 응답 대기 — 이 노트북에는 저장됨')+(eds.length?' · <b>지금 쓰는 팀원</b>: '+eds.map(function(x){return esc(x.r)+'('+esc(lab(x.k))+')';}).join(', '):'');}
+ function lab(k){var m=/^([a-z_]+?)(\d)?$/.exec(k)||[];var N={tname:'팀 이름',prob:'팀 문제',lt_top:'맨 위 질문',c:'원인',pn_name:'페르소나 이름',pn_scene:'장면',pn_goal:'목표',pn_pain:'불편',pn_quote:'인용',core:'핵심 원인',hw:'과제'};var b=N[k]||N[m[1]]||k;return m[2]&&!N[k]?m[2]+'단계 '+b:b;}
+ function curKey(){var a=document.activeElement;return a&&a.dataset&&a.dataset.f&&a.type!=='hidden'?a.dataset.f:'';}
+ /* 서로 덮어쓰지 않게: 바뀐 칸만 보내고, 지금 쓰는 칸 표시를 같은 요청에 실어 보냄(요청 수 줄임) */
+ function push(){if(!tm)return Promise.resolve(false);var cs=flat(),items=[];
+  Object.keys(cs).forEach(function(k){if(fly[k])return;if(k==='_prog'){if(cs[k]!==sent[k]&&Object.keys(dirty).length)items.push({k:k,v:JSON.parse(cs[k])});return;}
+   if(!dirty[k])return;if(cs[k]!==sent[k]&&!(cs[k]===''&&sent[k]===undefined))items.push({k:k,v:cs[k]});else delete dirty[k];});
+  var ck=curKey(),pv=ck+'|'+role();if(presQ!==null||(ck&&pv!==lastPres)||items.length&&ck){items.push({k:'_ed_'+DEV,v:{k:ck,r:role(),t:Date.now()}});lastPres=pv;presQ=null;}
+  if(!items.length){saveMeta();bar();return Promise.resolve(true);}var t=tm;items.forEach(function(it){if(it.k.indexOf('_ed_')===0)return;sent[it.k]=cs[it.k];fly[it.k]=1;if(it.k.charAt(1)===':')mine[it.k]=cs[it.k];});
+  return fetch(URL_,{method:'POST',body:JSON.stringify({key:KEY_,team:PFX+t,items:items})}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw 0;var nowT=Date.now();items.forEach(function(it){delete fly[it.k];doneAt[it.k]=nowT;});if(t===tm){var now=flat();items.forEach(function(it){if(now[it.k]===sent[it.k])delete dirty[it.k];});saveMeta();}at=nowT;fail=0;bar();return true;})
+  .catch(function(){items.forEach(function(it){delete fly[it.k];if(it.k.charAt(1)===':'){delete sent[it.k];dirty[it.k]=1;}});saveMeta();fail++;bar();return false;});}
+ function kick(){if(!tm)return;clearTimeout(pushT);pushT=setTimeout(push,1200);bar();}
+ function edit(k){dirty[k]=1;saveMeta();}
+ /* 내가 쓴 글이 팀원 글로 바뀔 때: 내 글을 버리지 않고 칸 아래에 보관 */
+ function keepLost(key,old){S.lost=S.lost||{};var L=S.lost[key]=S.lost[key]||[];if(L.some(function(x){return x.v===old;}))return;L.push({v:old,at:Date.now()});if(L.length>3)L.shift();}
+ function apply(f,sentAt){var ch=0,skip=false,ae=document.activeElement,now=Date.now();ED={};
+  Object.keys(f).forEach(function(k){
+   if(k.indexOf('_ed_')===0){var o=f[k];if(typeof o==='string'){try{o=JSON.parse(o);}catch(e){o=null;}}if(o&&o.k&&k!=='_ed_'+DEV&&now-o.t<40000)ED[k]=o;return;}
+   if(k.indexOf('f:')!==0&&k.indexOf('c:')!==0)return;var key=k.slice(2),v=f[k]==null?'':String(f[k]),isF=k.charAt(0)==='f',local=isF?F(key):(S.chk[key]?'1':'');
+   if(fly[k]||dirty[k])return;                       /* 내가 쓰는 중·보내는 중인 칸은 건드리지 않음 */
+   if(doneAt[k]&&doneAt[k]>=sentAt){skip=true;return;} /* 내 글이 서버에 닿기 전 읽은 옛 값 → 무시하고 다음에 다시 받음 */
+   if(sent[k]!==undefined&&local!==sent[k])return;
+   sent[k]=v;if(local===v)return;ch++;
+   if(isF){var lt=local.trim();if(lt.length>=2&&mine[k]===local&&v.indexOf(lt)<0)keepLost(key,local);
+    S.f[key]=v;document.querySelectorAll('[data-f="'+key+'"]').forEach(function(el){if(el===ae&&el.tagName!=='SELECT'){PEND[key]=v;el.classList.add('pend');el.title='팀원이 이 칸을 바꿨습니다. 칸 밖을 누르면 팀원 글이 보이고, 내 글은 칸 아래에 보관됩니다.';}});}
+   else S.chk[key]=v==='1';});
+  lockMark();
+  if(ch){lsSet(KEY+tm,JSON.stringify(S));bindFields();rerender();}bar();return skip;}
+ /* 다른 팀원이 쓰는 칸은 잠시 잠금(동시에 같은 칸을 쓰지 않게) */
+ function lockMark(){var ae=document.activeElement,busyK={};Object.keys(ED).forEach(function(x){busyK[ED[x].k]=ED[x].r;});
+  document.querySelectorAll('[data-f]').forEach(function(el){if(el.type==='hidden'||el.tagName==='SELECT')return;var who=busyK[el.dataset.f];
+   if(who&&el!==ae){el.readOnly=true;el.classList.add('editing');el.title=who+' 쓰는 중 — 끝나면 쓸 수 있어요';}
+   else if(el.classList.contains('editing')){el.readOnly=false;el.classList.remove('editing');if(!el.classList.contains('pend'))el.title='';}});}
+ function pull(){if(!tm||busy)return;var t=tm,sentAt=Date.now();busy=true;
+  fetch(URL_+'?key='+encodeURIComponent(KEY_)+'&op=pull&team='+encodeURIComponent(PFX+t)+'&since='+seq+'&t='+sentAt).then(function(r){return r.json();}).then(function(j){busy=false;if(!j||!j.ok||t!==tm)throw 0;var first=seq===0;var skip=apply(j.f||{},sentAt);if(first){var cs0=flat();Object.keys(cs0).forEach(function(k){if(k.charAt(1)===':'&&cs0[k]!==''&&sent[k]===undefined)dirty[k]=1;});saveMeta();}if(!skip)seq=Math.max(seq,+j.seq||0);at=at||Date.now();fail=0;bar();if(first||Object.keys(dirty).length)push();})
+  .catch(function(){busy=false;fail++;bar();});}
+ document.addEventListener('focusin',function(e){var el=e.target;if(el&&el.dataset&&el.dataset.f&&el.type!=='hidden'&&!el.readOnly){presQ=1;kick();}});
+ document.addEventListener('focusout',function(e){var el=e.target;if(el&&el.dataset&&el.dataset.f){var k=el.dataset.f;if(PEND[k]!=null){if(!dirty['f:'+k]){el.value=F(k);rerender();}delete PEND[k];}el.classList.remove('pend');el.title='';presQ=1;kick();}});
+ function stamp(){var d=new Date();return d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' · '+role();}
+ document.addEventListener('click',function(e){var b=e.target.closest('[data-stsave],[data-sbsave]');if(!b||!tm)return;
+  var lab0=b.textContent;b.disabled=true;b.textContent='저장하는 중…';
+  if(b.dataset.stsave){var i=b.dataset.stsave;S.f['sv'+i]=stamp();edit('f:sv'+i);lsSet(KEY+tm,JSON.stringify(S));}
+  else{S.f['sb_'+b.dataset.sbsave]=stamp();edit('f:sb_'+b.dataset.sbsave);lsSet(KEY+tm,JSON.stringify(S));}
+  push().then(function(ok){rerender();b.disabled=false;b.textContent=ok?'✓ 저장됨 · 팀원 화면에 반영':'이 노트북에는 저장됨 · 서버는 자동 재시도';setTimeout(function(){b.textContent=lab0;},2500);});});
+ /* 보관된 내 글 */
+ document.addEventListener('click',function(e){var b=e.target.closest('[data-lost]');if(!b||!tm)return;var key=b.dataset.lost,i=+b.dataset.i,L=(S.lost||{})[key]||[];var x=L[i];if(!x)return;
+  if(b.dataset.act==='add'){var cur=F(key).trim();var el0=document.querySelector('[data-f="'+key+'"]:not([type=hidden])');S.f[key]=cur?cur+(el0&&el0.tagName==='TEXTAREA'?'\n':' / ')+x.v:x.v;edit('f:'+key);}
+  L.splice(i,1);if(!L.length)delete S.lost[key];save();bindFields();rerender();});
+ function renderLost(){document.querySelectorAll('.lostbox').forEach(function(x){x.remove();});if(!S||!S.lost)return;
+  Object.keys(S.lost).forEach(function(key){var L=S.lost[key];if(!L||!L.length)return;var el=document.querySelector('[data-f="'+key+'"]:not([type=hidden])');if(!el)return;
+   el.insertAdjacentHTML('afterend','<div class="lostbox">'+L.map(function(x,i){return '<div><b>↺ 팀원이 이 칸을 바꿔서, 내가 쓴 글을 여기 보관했어요</b><q>'+esc(x.v)+'</q><span><button type="button" class="btn ghost" data-lost="'+esc(key)+'" data-i="'+i+'" data-act="add">내 글 뒤에 다시 붙이기</button> <button type="button" class="btn ghost" data-lost="'+esc(key)+'" data-i="'+i+'" data-act="x">지우기</button></span></div>';}).join('')+'</div>');});}
+ /* 팀 현황: 7팀을 한 번에(요청 1개) */
+ function board(){var g=$('pbGrid');if(!g)return;
+  fetch(URL_+'?key='+encodeURIComponent(KEY_)+'&op=board&t='+Date.now()).then(function(r){return r.json();}).then(function(j){var M={};((j&&j.teams)||[]).forEach(function(x){if(String(x.team).indexOf(PFX)===0)M[x.team.slice(PFX.length)]=x;});
+   TEAMS.forEach(function(T0){var id=T0.id,bid='pb_'+id.replace(/[^\w가-힣]/g,''),x=M[id],pr=x&&x.p;if(typeof pr==='string'){try{pr=JSON.parse(pr);}catch(e){pr=null;}}
+    var box=$(bid);if(!box){g.insertAdjacentHTML('beforeend','<div class="pbc'+(id===tm?' me':'')+'" id="'+bid+'"></div>');box=$(bid);}
+    var MC={'-2':'#b91c1c','-1':'#ea7a2a','0':'#8a94a6','1':'#4f8fd6','2':'#2f7a55'};
+    box.innerHTML='<h3>'+esc(id)+(id===tm?' · 우리 팀':'')+'</h3>'+(pr&&pr.n?'<div class="pbar"><i style="width:'+Math.round(pr.d/pr.n*100)+'%"></i></div><div class="note">'+pr.d+' / '+pr.n+' 완료'+(x.at?' · '+new Date(x.at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' 기준':'')+'</div><div class="pbm">'+(pr.mood||[]).map(function(m){return '<div title="'+esc(m[0])+'" style="background:'+(m[1]!==''&&MC[m[1]]?MC[m[1]]:'')+'">'+esc(m[0])+'</div>';}).join('')+'</div><ul>'+(pr.it||[]).map(function(x){return '<li class="'+(x[0]?'ok':'ng')+'">'+(x[0]?'✓ ':'· ')+esc(x[1])+'</li>';}).join('')+'</ul>':'<p class="note">아직 시작 전</p>');});})
+  .catch(function(){var n=g.querySelector('.note.err');if(!n)g.insertAdjacentHTML('afterbegin','<p class="note err">잠시 불러오지 못함 — 자동으로 다시 시도합니다</p>');});}
+ document.addEventListener('click',function(e){var b=e.target.closest('.tabs button');if(!b)return;clearInterval(pbT);if(b.dataset.p==='pb'){board();pbT=setInterval(function(){if(document.visibilityState!=='hidden')board();},20000);}});
+ function start(t){tm=t;seq=0;sent={};fly={};dirty={};mine={};doneAt={};PEND={};ED={};at=0;fail=0;
+  try{JSON.parse(lsGet(KEY+'dirty-'+t)||'[]').forEach(function(k){dirty[k]=1;});}catch(e){}try{mine=JSON.parse(lsGet(KEY+'mine-'+t)||'{}')||{};}catch(e){mine={};}
+  bar();pull();clearTimeout(pollT);(function loop(){pollT=setTimeout(function(){if(document.visibilityState!=='hidden'){pull();if(Object.keys(dirty).length)push();}loop();},7000+Math.floor(Math.random()*3000));})();}
+ window.addEventListener('beforeunload',function(e){if(Object.keys(dirty).length||Object.keys(fly).length){push();e.preventDefault();e.returnValue='';}});
+ return {start:start,kick:kick,edit:edit,pend:function(el,v){PEND[el.dataset.f]=v;el.classList.add('pend');},ok:function(){return fail===0&&at>0;},bar:bar,renderLost:renderLost,
+  srv:function(k){return tm&&at>0&&(sent['f:'+k]||'').trim()!=='';},ready:function(){return !!tm&&at>0;},_dbg:function(){return {sent:sent,dirty:dirty,seq:seq,mine:mine};}};
+})();
+window.SY=SY;
+if(CFG.init)CFG.init();
+progress();
+SY.bar();
+(function(){if(!CFG.teams){pick('solo');return;}var t0=lsGet(KEY+'team');if(t0&&CFG.teams.some(function(t){return t.id===t0;}))pick(t0);})();
+
+})();
+</script>
+</body>
+</html>
